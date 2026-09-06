@@ -1,0 +1,17 @@
+{
+  "name": "chess-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "High-performance full-stack Chess platform with React and Java Spring Boot",
+  "scripts": {
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "cd backend && mvn spring-boot:run",
+    "build:frontend": "npm run build --prefix frontend",
+    "build:backend": "cd backend && mvn clean package -DskipTests",
+    "build": "npm run build:frontend && npm run build:backend",
+    "test:backend": "cd backend && mvn test"
+  },
+  "keywords": ["chess", "react", "spring-boot", "websocket", "chesslib", "tailwind"],
+  "author": "",
+  "license": "MIT"
+}

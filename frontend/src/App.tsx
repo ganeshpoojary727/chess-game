@@ -1,0 +1,230 @@
+import React from 'react';
+import { Swords, Wifi, WifiOff, RefreshCw, Crown } from 'lucide-react';
+import { useChessGame } from './hooks/useChessGame';
+import { ChessBoardView } from './components/ChessBoardView';
+import { PlayerCard } from './components/PlayerCard';
+import { MoveHistory } from './components/MoveHistory';
+import { GameControls } from './components/GameControls';
+import { StatusBanner } from './components/StatusBanner';
+
+export const App: React.FC = () => {
+  // Read game ID from URL query if present
+  const params = new URLSearchParams(window.location.search);
+  const urlGameId = params.get('game') || undefined;
+
+  const {
+    fen,
+    gameState,
+    connectionState,
+    orientation,
+    selectedSquare,
+    possibleMoves,
+    errorMessage,
+    isAiOpponent,
+    setIsAiOpponent,
+    onSquareClick,
+    onPieceDrop,
+    handleNewGame,
+    handleReset,
+    handleResign,
+    toggleOrientation,
+  } = useChessGame(urlGameId);
+
+  const whitePlayerName = gameState?.whitePlayer?.name || 'White Player';
+  const blackPlayerName = isAiOpponent ? 'Stockfish (AI)' : (gameState?.blackPlayer?.name || 'Black Player');
+
+  const topPlayer = orientation === 'white' ? {
+    name: blackPlayerName,
+    color: 'black' as const,
+    isTurn: gameState?.sideToMove === 'BLACK',
+    captured: gameState?.capturedBlackPieces || [],
+  } : {
+    name: whitePlayerName,
+    color: 'white' as const,
+    isTurn: gameState?.sideToMove === 'WHITE',
+    captured: gameState?.capturedWhitePieces || [],
+  };
+
+  const bottomPlayer = orientation === 'white' ? {
+    name: whitePlayerName,
+    color: 'white' as const,
+    isTurn: gameState?.sideToMove === 'WHITE',
+    captured: gameState?.capturedWhitePieces || [],
+  } : {
+    name: blackPlayerName,
+    color: 'black' as const,
+    isTurn: gameState?.sideToMove === 'BLACK',
+    captured: gameState?.capturedBlackPieces || [],
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 flex flex-col text-slate-100">
+      {/* Top Navigation Bar */}
+      <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-lg px-4 lg:px-8 py-3.5">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-900/30">
+              <Swords className="w-5 h-5 text-slate-950" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+                  Chess App
+                </h1>
+                <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  Java 21 + React
+                </span>
+              </div>
+              <p className="text-xs text-slate-400">High-Performance WebSocket Engine</p>
+            </div>
+          </div>
+
+          {/* Connection Status Badge & Game ID */}
+          <div className="flex items-center gap-3">
+            {gameState?.gameId && (
+              <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-400">
+                <span>ID:</span>
+                <span className="text-slate-200 font-semibold truncate max-w-[120px]">
+                  {gameState.gameId}
+                </span>
+              </div>
+            )}
+
+            <div
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border ${
+                connectionState === 'CONNECTED'
+                  ? 'bg-emerald-950/60 text-emerald-300 border-emerald-500/30'
+                  : connectionState === 'CONNECTING'
+                  ? 'bg-amber-950/60 text-amber-300 border-amber-500/30'
+                  : 'bg-red-950/60 text-red-300 border-red-500/30'
+              }`}
+            >
+              {connectionState === 'CONNECTED' ? (
+                <>
+                  <Wifi className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                  <span>STOMP Connected</span>
+                </>
+              ) : connectionState === 'CONNECTING' ? (
+                <>
+                  <RefreshCw className="w-3.5 h-3.5 text-amber-400 animate-spin" />
+                  <span>Connecting...</span>
+                </>
+              ) : (
+                <>
+                  <WifiOff className="w-3.5 h-3.5 text-red-400" />
+                  <span>Standalone / Offline</span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Chess Arena */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left 7 Columns: Chessboard Section */}
+        <div className="lg:col-span-7 flex flex-col gap-3">
+          {/* Top Player Card */}
+          <PlayerCard
+            name={topPlayer.name}
+            color={topPlayer.color}
+            isTurn={topPlayer.isTurn}
+            capturedPieces={topPlayer.captured}
+          />
+
+          {/* Status Notifications */}
+          <StatusBanner
+            status={gameState?.status}
+            winner={gameState?.winner}
+            inCheck={gameState?.inCheck}
+            errorMessage={errorMessage}
+          />
+
+          {/* Interactive Chess Board */}
+          <ChessBoardView
+            fen={fen}
+            orientation={orientation}
+            selectedSquare={selectedSquare}
+            possibleMoves={possibleMoves}
+            lastMove={gameState?.lastMove}
+            inCheck={gameState?.inCheck}
+            sideToMove={gameState?.sideToMove}
+            onPieceDrop={onPieceDrop}
+            onSquareClick={onSquareClick}
+          />
+
+          {/* Bottom Player Card */}
+          <PlayerCard
+            name={bottomPlayer.name}
+            color={bottomPlayer.color}
+            isTurn={bottomPlayer.isTurn}
+            capturedPieces={bottomPlayer.captured}
+          />
+
+          {/* Controls Bar */}
+          <GameControls
+            onNewGame={handleNewGame}
+            onReset={handleReset}
+            onResign={handleResign}
+            onFlipBoard={toggleOrientation}
+            isAiOpponent={isAiOpponent}
+            onToggleAi={() => setIsAiOpponent(!isAiOpponent)}
+            gameId={gameState?.gameId}
+          />
+        </div>
+
+        {/* Right 5 Columns: Moves History & Engine Status */}
+        <div className="lg:col-span-5 flex flex-col gap-4 h-full min-h-[500px]">
+          {/* Move Log */}
+          <div className="flex-1 min-h-[380px]">
+            <MoveHistory
+              moves={gameState?.moveHistory || []}
+              currentFen={fen}
+            />
+          </div>
+
+          {/* Quick Engine & Match Info */}
+          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-md space-y-3">
+            <div className="flex items-center justify-between text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              <span>Match Status</span>
+              <span className="flex items-center gap-1 text-emerald-400">
+                <Crown className="w-3.5 h-3.5" />
+                {gameState?.status || 'IN_PROGRESS'}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 pt-1 text-center">
+              <div className="p-2 rounded-lg bg-slate-950/60 border border-slate-800/80">
+                <span className="block text-[11px] text-slate-400">Turn</span>
+                <span className="font-bold text-sm text-slate-200">
+                  {gameState?.sideToMove || 'WHITE'}
+                </span>
+              </div>
+
+              <div className="p-2 rounded-lg bg-slate-950/60 border border-slate-800/80">
+                <span className="block text-[11px] text-slate-400">Full Move</span>
+                <span className="font-bold text-sm text-slate-200">
+                  {gameState?.fullMoveNumber || 1}
+                </span>
+              </div>
+
+              <div className="p-2 rounded-lg bg-slate-950/60 border border-slate-800/80">
+                <span className="block text-[11px] text-slate-400">Half Clock</span>
+                <span className="font-bold text-sm text-slate-200">
+                  {gameState?.halfMoveClock || 0}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="py-3 text-center border-t border-slate-900 text-xs text-slate-500">
+        High-Performance Chess Monorepo &copy; 2026 &bull; Spring Boot 3.3.4 (Java 21) &bull; chesslib &bull; React + Vite + Tailwind CSS
+      </footer>
+    </div>
+  );
+};
+
+export default App;
