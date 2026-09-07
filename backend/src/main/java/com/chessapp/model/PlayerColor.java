@@ -1,4 +1,4 @@
-package com.chess.model;
+package com.chessapp.model;
 
 public enum PlayerColor {
     WHITE,

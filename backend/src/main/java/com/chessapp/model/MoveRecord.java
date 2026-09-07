@@ -1,8 +1,6 @@
-package com.chess.dto;
+package com.chessapp.model;
 
-import com.chess.model.PlayerColor;
-
-public class MoveRecordDto {
+public class MoveRecord {
     private int moveNumber;
     private PlayerColor color;
     private String from;
@@ -11,10 +9,10 @@ public class MoveRecordDto {
     private String fenAfter;
     private long timestamp;
 
-    public MoveRecordDto() {
+    public MoveRecord() {
     }
 
-    public MoveRecordDto(int moveNumber, PlayerColor color, String from, String to, String san, String fenAfter, long timestamp) {
+    public MoveRecord(int moveNumber, PlayerColor color, String from, String to, String san, String fenAfter, long timestamp) {
         this.moveNumber = moveNumber;
         this.color = color;
         this.from = from;
