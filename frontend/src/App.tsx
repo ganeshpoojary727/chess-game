@@ -7,10 +7,21 @@ import { MoveHistory } from './components/MoveHistory';
 import { GameControls } from './components/GameControls';
 import { StatusBanner } from './components/StatusBanner';
 
+import { MultiplayerRoomPage } from './pages/MultiplayerRoomPage';
+
 export const App: React.FC = () => {
-  // Read game ID from URL query if present
+  // Read game or room ID from URL query if present
   const params = new URLSearchParams(window.location.search);
+  const urlRoomId = params.get('room');
   const urlGameId = params.get('game') || undefined;
+
+  // Active view: 'multiplayer' | 'solo'
+  const [activeTab, setActiveTab] = React.useState<'multiplayer' | 'solo'>(() => {
+    if (urlRoomId || sessionStorage.getItem('chess_room_code')) {
+      return 'multiplayer';
+    }
+    return 'multiplayer'; // Default to multiplayer mode
+  });
 
   const {
     fen,
@@ -56,6 +67,22 @@ export const App: React.FC = () => {
     isTurn: gameState?.sideToMove === 'BLACK',
     captured: gameState?.capturedBlackPieces || [],
   };
+
+  if (activeTab === 'multiplayer') {
+    return (
+      <div className="relative min-h-screen">
+        <div className="fixed bottom-4 left-4 z-50">
+          <button
+            onClick={() => setActiveTab('solo')}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900/95 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300 hover:text-white shadow-2xl backdrop-blur-md transition-all active:scale-95"
+          >
+            <span>🤖 Solo / AI Mode</span>
+          </button>
+        </div>
+        <MultiplayerRoomPage />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 flex flex-col text-slate-100">
@@ -116,6 +143,13 @@ export const App: React.FC = () => {
                 </>
               )}
             </div>
+
+            <button
+              onClick={() => setActiveTab('multiplayer')}
+              className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white transition-all shadow-md active:scale-95 flex items-center gap-1.5"
+            >
+              <span>⚡ Online Rooms</span>
+            </button>
           </div>
         </div>
       </header>
