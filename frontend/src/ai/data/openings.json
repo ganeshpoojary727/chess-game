@@ -1,0 +1,453 @@
+{
+  "openings": [
+    {
+      "id": "scotch-game",
+      "name": "Scotch Game",
+      "eco": "C45",
+      "category": "Open Games (1. e4 e5)",
+      "description": "An aggressive, classical opening where White immediately opens the central d-file with 3. d4, leading to dynamic tactical play and active piece coordination.",
+      "variations": [
+        {
+          "id": "scotch-classical",
+          "name": "Classical Variation",
+          "moves": [
+            { "san": "e4", "comment": "Controls the central d5 and f5 squares while clearing diagonals for the queen and bishop." },
+            { "san": "e5", "comment": "Stakes an equal claim in the center and restrains White's pawn thrusts." },
+            { "san": "Nf3", "comment": "Develops the kingside knight toward the center, applying direct pressure to the e5 pawn." },
+            { "san": "Nc6", "comment": "Natural piece development defending the e5 pawn and contesting d4." },
+            { "san": "d4", "comment": "The defining move of the Scotch Game! White immediately challenges Black's center pawn." },
+            { "san": "exd4", "comment": "Black surrenders the center temporarily to avoid being structurally cramped." },
+            { "san": "Nxd4", "comment": "White recaptures with strong knight centralization in the middle of the board." },
+            { "san": "Bc5", "comment": "Black develops with tempo, putting immediate tactical pressure on the d4 knight." },
+            { "san": "Be3", "comment": "White solidifies the d4 knight with the dark-squared bishop, preparing queenside castling." },
+            { "san": "Qf6", "comment": "Black adds a third attacker to d4 while keeping king safety flexible." },
+            { "san": "c3", "comment": "Reinforces d4 with a solid pawn base, denying Black tactics on the long diagonal." }
+          ]
+        },
+        {
+          "id": "scotch-mieses",
+          "name": "Mieses Variation",
+          "moves": [
+            { "san": "e4", "comment": "Controls the central d5 and f5 squares while clearing diagonals for the queen and bishop." },
+            { "san": "e5", "comment": "Stakes an equal claim in the center and restrains White's pawn thrusts." },
+            { "san": "Nf3", "comment": "Develops the kingside knight toward the center, applying direct pressure to the e5 pawn." },
+            { "san": "Nc6", "comment": "Natural piece development defending the e5 pawn and contesting d4." },
+            { "san": "d4", "comment": "The defining move of the Scotch Game! White challenges Black's center immediately." },
+            { "san": "exd4", "comment": "Black accepts the trade to avoid being cramped." },
+            { "san": "Nxd4", "comment": "White recaptures, centralizing the knight." },
+            { "san": "Nf6", "comment": "Counterattacks White's unprotected pawn on e4." },
+            { "san": "Nxc6", "comment": "Trades knights to damage Black's pawn structure." },
+            { "san": "bxc6", "comment": "Recaptures towards the center, opening the b-file for rook activity." },
+            { "san": "e5", "comment": "Pawn thrust attacking the f6 knight and seizing kingside space." },
+            { "san": "Qe7", "comment": "Pins the e5 pawn to White's king, preventing the knight capture." },
+            { "san": "Qe2", "comment": "Breaks the pin and protects e5." },
+            { "san": "Nd5", "comment": "The knight hops safely into a dominant central outpost." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scholars-mate",
+      "name": "Scholar's Mate",
+      "eco": "C20",
+      "category": "Open Games (1. e4 e5)",
+      "description": "The quintessential 4-move mating attack targeting the vulnerable f7 weakness, along with the standard refutation and defense.",
+      "variations": [
+        {
+          "id": "scholars-attack",
+          "name": "Checkmate Attack",
+          "moves": [
+            { "san": "e4", "comment": "Controls the center and frees diagonals." },
+            { "san": "e5", "comment": "Equal central claim." },
+            { "san": "Qh5", "comment": "Aggressive early queen sortie threatening both e5 and f7." },
+            { "san": "Nc6", "comment": "Solid defense protecting the vulnerable e5 pawn." },
+            { "san": "Bc4", "comment": "Develops the bishop to coordinate on the weak f7 square." },
+            { "san": "Nf6", "comment": "A natural blunder by Black that ignores the double attack on f7!" },
+            { "san": "Qxf7#", "comment": "Checkmate! The queen is protected by the c4 bishop and the king has no escape." }
+          ]
+        },
+        {
+          "id": "scholars-defense",
+          "name": "Defensive Refutation",
+          "moves": [
+            { "san": "e4", "comment": "Controls the center and frees diagonals." },
+            { "san": "e5", "comment": "Equal central claim." },
+            { "san": "Qh5", "comment": "Aggressive queen sortie targeting e5 and f7." },
+            { "san": "Nc6", "comment": "Calm piece development protecting the e5 pawn." },
+            { "san": "Bc4", "comment": "White coordinates bishop and queen against f7." },
+            { "san": "g6", "comment": "Crucial refutation! Blocks the queen's path to f7 with tempo." },
+            { "san": "Qf3", "comment": "White renews the mating threat on f7 along the f-file." },
+            { "san": "Nf6", "comment": "Blocks the mating path completely while developing a minor piece." },
+            { "san": "Ne2", "comment": "White prepares to castle kingside." },
+            { "san": "Bg7", "comment": "Black fianchettos the bishop, completely securing the kingside." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "italian-game",
+      "name": "Italian Game",
+      "eco": "C50",
+      "category": "Open Games (1. e4 e5)",
+      "description": "One of the oldest and most respected openings in chess. Focuses on rapid development and rapid pressure against Black's f7 square.",
+      "variations": [
+        {
+          "id": "giuoco-piano",
+          "name": "Giuoco Piano",
+          "moves": [
+            { "san": "e4", "comment": "Controls central d5 and f5." },
+            { "san": "e5", "comment": "Matches central presence." },
+            { "san": "Nf3", "comment": "Attacks the e5 pawn." },
+            { "san": "Nc6", "comment": "Defends e5 and contests d4." },
+            { "san": "Bc4", "comment": "The Italian Bishop! Targets the f7 square and prepares kingside castling." },
+            { "san": "Bc5", "comment": "The Quiet Game: Black mirrors development aiming at White's f2 square." },
+            { "san": "c3", "comment": "Prepares the strong pawn center with d2-d4." },
+            { "san": "Nf6", "comment": "Black develops the knight and counterattacks White's e4 pawn." },
+            { "san": "d4", "comment": "White strikes the center, attacking the bishop and pawns." },
+            { "san": "exd4", "comment": "Liquidates the center." },
+            { "san": "cxd4", "comment": "White builds an imposing two-pawn center." },
+            { "san": "Bb4+", "comment": "Active check disrupting White's piece coordination." }
+          ]
+        },
+        {
+          "id": "two-knights",
+          "name": "Two Knights Defense",
+          "moves": [
+            { "san": "e4", "comment": "Controls center." },
+            { "san": "e5", "comment": "Equal central presence." },
+            { "san": "Nf3", "comment": "Attacks e5." },
+            { "san": "Nc6", "comment": "Defends e5." },
+            { "san": "Bc4", "comment": "The Italian Bishop eyeing f7." },
+            { "san": "Nf6", "comment": "The Two Knights! Black immediately attacks e4 rather than playing Bc5." },
+            { "san": "d3", "comment": "Solid and classical, protecting e4 and freeing the dark-squared bishop." },
+            { "san": "Bc5", "comment": "Black develops the bishop to its active diagonal." },
+            { "san": "O-O", "comment": "White castles to king safety." },
+            { "san": "d6", "comment": "Solidifies the e5 pawn and prepares the c8 bishop's development." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ruy-lopez",
+      "name": "Ruy Lopez (Spanish Opening)",
+      "eco": "C60",
+      "category": "Open Games (1. e4 e5)",
+      "description": "The quintessential classical master opening. 3. Bb5 pins and pressures the defender of e5, creating rich strategic maneuvering.",
+      "variations": [
+        {
+          "id": "ruy-morphy",
+          "name": "Morphy Defense",
+          "moves": [
+            { "san": "e4", "comment": "Central control." },
+            { "san": "e5", "comment": "Central equality." },
+            { "san": "Nf3", "comment": "Attacks e5." },
+            { "san": "Nc6", "comment": "Defends e5." },
+            { "san": "Bb5", "comment": "The Spanish Bishop pins and pressures the knight defending e5." },
+            { "san": "a6", "comment": "Morphy's move: forces the bishop to declare its intention." },
+            { "san": "Ba4", "comment": "Preserves the bishop and keeps the pin active." },
+            { "san": "Nf6", "comment": "Develops with an attack on e4." },
+            { "san": "O-O", "comment": "Safeguards the king and activates the rook." },
+            { "san": "Be7", "comment": "Quiet development preparing kingside castling." },
+            { "san": "Re1", "comment": "Protects the e4 pawn and controls the open e-file." },
+            { "san": "b5", "comment": "Breaks the pin and expands on the queenside." },
+            { "san": "Bb3", "comment": "The bishop retreats to its ideal diagonal eyeing f7." },
+            { "san": "d6", "comment": "Solidifies e5 and prepares queenside counterplay." }
+          ]
+        },
+        {
+          "id": "ruy-berlin",
+          "name": "Berlin Defense",
+          "moves": [
+            { "san": "e4", "comment": "Central control." },
+            { "san": "e5", "comment": "Central equality." },
+            { "san": "Nf3", "comment": "Attacks e5." },
+            { "san": "Nc6", "comment": "Defends e5." },
+            { "san": "Bb5", "comment": "Pins the knight." },
+            { "san": "Nf6", "comment": "The Berlin Wall: Black immediately hits e4 without wasting a tempo on a6." },
+            { "san": "O-O", "comment": "White allows the capture of e4 for rapid development." },
+            { "san": "Nxe4", "comment": "Accepts the central pawn." },
+            { "san": "d4", "comment": "White strikes the center to regain the pawn." },
+            { "san": "Nd6", "comment": "The knight attacks the b5 bishop while retreating." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sicilian-defense",
+      "name": "Sicilian Defense",
+      "eco": "B20",
+      "category": "Semi-Open Games (1. e4 ...)",
+      "description": "The most popular and highest-scoring response to 1. e4. Black creates immediate asymmetry and battles for the center with a flank pawn.",
+      "variations": [
+        {
+          "id": "sicilian-najdorf",
+          "name": "Najdorf Variation",
+          "moves": [
+            { "san": "e4", "comment": "Controls the center." },
+            { "san": "c5", "comment": "The Sicilian! Fights for d4 from the flank, creating dynamic imbalances." },
+            { "san": "Nf3", "comment": "Prepares d2-d4." },
+            { "san": "d6", "comment": "Prevents e4-e5 advances and prepares knight development." },
+            { "san": "d4", "comment": "White opens the center." },
+            { "san": "cxd4", "comment": "Black trades a flank pawn for White's central d-pawn." },
+            { "san": "Nxd4", "comment": "White recaptures with strong piece centralization." },
+            { "san": "Nf6", "comment": "Attacks e4, forcing White to develop Nc3." },
+            { "san": "Nc3", "comment": "Defends e4." },
+            { "san": "a6", "comment": "The hallmark of the Najdorf! Stops Nb5 and prepares ...b5 expansion." },
+            { "san": "Be3", "comment": "The English Attack setup, eyeing the kingside." },
+            { "san": "e5", "comment": "Strikes the d4 knight and establishes a solid pawn wedge." }
+          ]
+        },
+        {
+          "id": "sicilian-dragon",
+          "name": "Dragon Variation",
+          "moves": [
+            { "san": "e4", "comment": "Central control." },
+            { "san": "c5", "comment": "Sicilian asymmetry." },
+            { "san": "Nf3", "comment": "Prepares d4." },
+            { "san": "d6", "comment": "Controls e5." },
+            { "san": "d4", "comment": "Opens the center." },
+            { "san": "cxd4", "comment": "Trades flank for center." },
+            { "san": "Nxd4", "comment": "Recaptures." },
+            { "san": "Nf6", "comment": "Hits e4." },
+            { "san": "Nc3", "comment": "Defends e4." },
+            { "san": "g6", "comment": "The Dragon! Black prepares to fianchetto the bishop on the long diagonal." },
+            { "san": "Be3", "comment": "Prepares the Yugoslav Attack with f3 and Qd2." },
+            { "san": "Bg7", "comment": "The Dragon bishop breathes fire down the a1-h8 diagonal." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "french-defense",
+      "name": "French Defense",
+      "eco": "C02",
+      "category": "Semi-Open Games (1. e4 ...)",
+      "description": "A resilient, counter-attacking system where Black builds a rock-solid pawn chain and counter-strikes White's center with ...c5 and ...f6.",
+      "variations": [
+        {
+          "id": "french-advance",
+          "name": "Advance Variation",
+          "moves": [
+            { "san": "e4", "comment": "Controls the center." },
+            { "san": "e6", "comment": "Prepares d7-d5 while maintaining a solid pawn structure." },
+            { "san": "d4", "comment": "White establishes the full pawn center." },
+            { "san": "d5", "comment": "Black immediately challenges White's e4 pawn." },
+            { "san": "e5", "comment": "The Advance Variation: White locks the center and gains kingside territory." },
+            { "san": "c5", "comment": "Black immediately undermines the base of White's pawn chain on d4." },
+            { "san": "c3", "comment": "White fortifies the d4 pawn with a pawn chain." },
+            { "san": "Nc6", "comment": "Adds another attacker to d4." },
+            { "san": "Nf3", "comment": "Defends d4." },
+            { "san": "Qb6", "comment": "Puts triple pressure on d4 and eyes the b2 pawn." }
+          ]
+        },
+        {
+          "id": "french-winawer",
+          "name": "Winawer Variation",
+          "moves": [
+            { "san": "e4", "comment": "Center control." },
+            { "san": "e6", "comment": "Prepares d5." },
+            { "san": "d4", "comment": "Full center." },
+            { "san": "d5", "comment": "Challenges e4." },
+            { "san": "Nc3", "comment": "Defends e4 with minor piece development." },
+            { "san": "Bb4", "comment": "The Winawer! Pins the knight to the king, threatening to capture e4." },
+            { "san": "e5", "comment": "White closes the center." },
+            { "san": "c5", "comment": "Black strikes at d4." },
+            { "san": "a3", "comment": "Puts the question to the pinned bishop." },
+            { "san": "Bxc3+", "comment": "Doubles White's c-pawns in exchange for the bishop pair." },
+            { "san": "bxc3", "comment": "Recaptures." },
+            { "san": "Ne7", "comment": "Black prepares kingside castling and knight maneuver." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "caro-kann",
+      "name": "Caro-Kann Defense",
+      "eco": "B12",
+      "category": "Semi-Open Games (1. e4 ...)",
+      "description": "Known as the most solid defense in chess. Black supports ...d5 with ...c6, keeping the light-squared bishop free before closing the pawn structure.",
+      "variations": [
+        {
+          "id": "caro-advance",
+          "name": "Advance Variation",
+          "moves": [
+            { "san": "e4", "comment": "Controls the center." },
+            { "san": "c6", "comment": "Prepares d7-d5 without blocking the c8-h3 diagonal." },
+            { "san": "d4", "comment": "Full pawn center." },
+            { "san": "d5", "comment": "Strikes the center." },
+            { "san": "e5", "comment": "White closes the center, gaining space." },
+            { "san": "Bf5", "comment": "Key move of the Caro-Kann! Develops the bishop before playing ...e6." },
+            { "san": "Nf3", "comment": "Develops knight toward center." },
+            { "san": "e6", "comment": "Secures the pawn chain." },
+            { "san": "Be2", "comment": "Prepares kingside castling." },
+            { "san": "c5", "comment": "Black chips away at the d4 pawn base." }
+          ]
+        },
+        {
+          "id": "caro-classical",
+          "name": "Classical Variation",
+          "moves": [
+            { "san": "e4", "comment": "Center control." },
+            { "san": "c6", "comment": "Prepares d5." },
+            { "san": "d4", "comment": "Full center." },
+            { "san": "d5", "comment": "Challenges e4." },
+            { "san": "Nc3", "comment": "Defends e4." },
+            { "san": "dxe4", "comment": "Liquidates the center." },
+            { "san": "Nxe4", "comment": "Recaptures with centralized knight." },
+            { "san": "Bf5", "comment": "Develops bishop and challenges the e4 knight with tempo." },
+            { "san": "Ng3", "comment": "Knight steps away and attacks the bishop." },
+            { "san": "Bg6", "comment": "Bishop retreats safely." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "queens-gambit",
+      "name": "Queen's Gambit",
+      "eco": "D30",
+      "category": "Closed Games (1. d4 ...)",
+      "description": "One of the oldest and most prestigious openings in chess. White offers a flank c-pawn to secure dominant control of the central d4 and e4 squares.",
+      "variations": [
+        {
+          "id": "queens-gambit-declined",
+          "name": "Queen's Gambit Declined (QGD)",
+          "moves": [
+            { "san": "d4", "comment": "Controls the central e5 and c5 squares." },
+            { "san": "d5", "comment": "Firmly stakes out the center." },
+            { "san": "c4", "comment": "The Queen's Gambit! Offers a flank pawn to divert Black's central d5 pawn." },
+            { "san": "e6", "comment": "Declines the gambit, solidly reinforcing the d5 pawn." },
+            { "san": "Nc3", "comment": "Pressures d5 and contests e4." },
+            { "san": "Nf6", "comment": "Develops a piece and defends d5." },
+            { "san": "Bg5", "comment": "Pins the f6 knight, threatening to dismantle Black's center." },
+            { "san": "Be7", "comment": "Unpins the knight and prepares kingside castling." },
+            { "san": "e3", "comment": "Solidifies d4 and opens a path for the f1 bishop." },
+            { "san": "O-O", "comment": "Black safely castles kingside." }
+          ]
+        },
+        {
+          "id": "queens-gambit-accepted",
+          "name": "Queen's Gambit Accepted (QGA)",
+          "moves": [
+            { "san": "d4", "comment": "Controls center." },
+            { "san": "d5", "comment": "Equal central presence." },
+            { "san": "c4", "comment": "Offers the gambit pawn." },
+            { "san": "dxc4", "comment": "Accepts the gambit, conceding the center for rapid development." },
+            { "san": "Nf3", "comment": "Prevents Black from playing ...e5." },
+            { "san": "Nf6", "comment": "Develops knight." },
+            { "san": "e3", "comment": "Prepares Bxc4 recapture." },
+            { "san": "e6", "comment": "Opens bishop diagonal." },
+            { "san": "Bxc4", "comment": "Recaptures the pawn with active bishop placement." },
+            { "san": "c5", "comment": "Black strikes back at White's d4 center." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kings-indian",
+      "name": "King's Indian Defense",
+      "eco": "E60",
+      "category": "Closed Games (1. d4 ...)",
+      "description": "A hypermodern, fighting defense where Black permits White a broad pawn center only to launch a ferocious kingside attack.",
+      "variations": [
+        {
+          "id": "kid-classical",
+          "name": "Classical Variation",
+          "moves": [
+            { "san": "d4", "comment": "Center control." },
+            { "san": "Nf6", "comment": "Prevents e4 while maintaining hypermodern flexibility." },
+            { "san": "c4", "comment": "White establishes queenside space." },
+            { "san": "g6", "comment": "Prepares the kingside fianchetto." },
+            { "san": "Nc3", "comment": "Controls e4." },
+            { "san": "Bg7", "comment": "The King's Indian bishop shines down the long diagonal." },
+            { "san": "e4", "comment": "White builds a massive pawn center." },
+            { "san": "d6", "comment": "Controls e5 and prepares central counterplay." },
+            { "san": "Nf3", "comment": "Develops knight." },
+            { "san": "O-O", "comment": "Black's king is completely tucked away." },
+            { "san": "Be2", "comment": "Prepares castling." },
+            { "san": "e5", "comment": "The thematic central break of the King's Indian!" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "london-system",
+      "name": "London System",
+      "eco": "D02",
+      "category": "Closed Games (1. d4 ...)",
+      "description": "An ultra-solid, universal setup for White. White develops the dark-squared bishop outside the pawn chain before constructing a pyramid structure.",
+      "variations": [
+        {
+          "id": "london-mainline",
+          "name": "Mainline",
+          "moves": [
+            { "san": "d4", "comment": "Controls central e5 and c5." },
+            { "san": "d5", "comment": "Equal central stake." },
+            { "san": "Bf4", "comment": "The hallmark London Bishop: developed before e3 to avoid being locked inside the pawn chain." },
+            { "san": "Nf6", "comment": "Natural piece development." },
+            { "san": "e3", "comment": "Builds the solid pawn triangle supporting d4." },
+            { "san": "c5", "comment": "Black attacks the base of White's d4 pawn." },
+            { "san": "c3", "comment": "White solidifies the pyramid pawn structure." },
+            { "san": "Nc6", "comment": "Black increases central pressure." },
+            { "san": "Nd2", "comment": "Develops the knight without blocking the c3 pawn." },
+            { "san": "e6", "comment": "Black solidifies the center." },
+            { "san": "Ngf3", "comment": "Harmonious development with rock-solid central control." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scandinavian-defense",
+      "name": "Scandinavian Defense",
+      "eco": "B01",
+      "category": "Semi-Open Games (1. e4 ...)",
+      "description": "An uncompromising opening where Black immediately challenges White's e4 pawn on move 1, forcing an immediate central resolution.",
+      "variations": [
+        {
+          "id": "scandi-mainline",
+          "name": "Mieses-Kotroc Variation",
+          "moves": [
+            { "san": "e4", "comment": "Controls the center." },
+            { "san": "d5", "comment": "The Scandinavian: challenges e4 immediately." },
+            { "san": "exd5", "comment": "White takes the pawn." },
+            { "san": "Qxd5", "comment": "Black recaptures with the queen." },
+            { "san": "Nc3", "comment": "White develops with tempo, attacking the queen." },
+            { "san": "Qa5", "comment": "The classic queen retreat, pinning c3 against the king's diagonal." },
+            { "san": "d4", "comment": "White establishes a strong central pawn." },
+            { "san": "Nf6", "comment": "Black develops toward the center." },
+            { "san": "Nf3", "comment": "White develops harmoniously." },
+            { "san": "c6", "comment": "Provides an escape square on c7 or d8 for the queen." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fried-liver",
+      "name": "Fried Liver Attack",
+      "eco": "C57",
+      "category": "Open Games (1. e4 e5)",
+      "description": "A savage tactical sacrifice where White sacrifices a knight on f7 to drag Black's king into the center of the board under brutal crossfire.",
+      "variations": [
+        {
+          "id": "fried-liver-mainline",
+          "name": "Mainline Sacrifice",
+          "moves": [
+            { "san": "e4", "comment": "Center control." },
+            { "san": "e5", "comment": "Equal central presence." },
+            { "san": "Nf3", "comment": "Attacks e5." },
+            { "san": "Nc6", "comment": "Defends e5." },
+            { "san": "Bc4", "comment": "Italian Bishop eyeing f7." },
+            { "san": "Nf6", "comment": "Two Knights Defense." },
+            { "san": "Ng5", "comment": "Aggressive leap attacking f7 with bishop and knight!" },
+            { "san": "d5", "comment": "The only viable defense: blocking the bishop's diagonal." },
+            { "san": "exd5", "comment": "White takes the pawn." },
+            { "san": "Nxd5", "comment": "A fateful recapture that walks into the legendary Fried Liver sacrifice!" },
+            { "san": "Nxf7", "comment": "The Fried Liver sacrifice! White sacs the knight to rip open Black's king." },
+            { "san": "Kxf7", "comment": "Forced capture, pulling the black king into the open." },
+            { "san": "Qf3+", "comment": "Double attack on king and d5 knight!" },
+            { "san": "Ke6", "comment": "Black must walk into the center of the board to protect the knight." }
+          ]
+        }
+      ]
+    }
+  ]
+}

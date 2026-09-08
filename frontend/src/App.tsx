@@ -9,6 +9,7 @@ import { StatusBanner } from './components/StatusBanner';
 import { EngineEvaluationBar } from './components/practice/EngineEvaluationBar';
 
 import { MultiplayerRoomPage } from './pages/MultiplayerRoomPage';
+import { PracticePage } from './pages/PracticePage';
 
 export const App: React.FC = () => {
   // Read game or room ID from URL query if present
@@ -16,8 +17,8 @@ export const App: React.FC = () => {
   const urlRoomId = params.get('room');
   const urlGameId = params.get('game') || undefined;
 
-  // Active view: 'multiplayer' | 'solo'
-  const [activeTab, setActiveTab] = React.useState<'multiplayer' | 'solo'>(() => {
+  // Active view: 'multiplayer' | 'practice' | 'solo'
+  const [activeTab, setActiveTab] = React.useState<'multiplayer' | 'practice' | 'solo'>(() => {
     if (urlRoomId || sessionStorage.getItem('chess_room_code')) {
       return 'multiplayer';
     }
@@ -81,7 +82,13 @@ export const App: React.FC = () => {
   if (activeTab === 'multiplayer') {
     return (
       <div className="relative min-h-screen">
-        <div className="fixed bottom-4 left-4 z-50">
+        <div className="fixed bottom-4 left-4 z-50 flex items-center gap-2">
+          <button
+            onClick={() => setActiveTab('practice')}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-900/95 hover:bg-indigo-800 border border-indigo-700 text-xs font-bold text-indigo-200 hover:text-white shadow-2xl backdrop-blur-md transition-all active:scale-95"
+          >
+            <span>📚 Opening Practice Bot</span>
+          </button>
           <button
             onClick={() => setActiveTab('solo')}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900/95 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300 hover:text-white shadow-2xl backdrop-blur-md transition-all active:scale-95"
@@ -90,6 +97,14 @@ export const App: React.FC = () => {
           </button>
         </div>
         <MultiplayerRoomPage />
+      </div>
+    );
+  }
+
+  if (activeTab === 'practice') {
+    return (
+      <div className="relative min-h-screen">
+        <PracticePage onSwitchMode={setActiveTab} />
       </div>
     );
   }
@@ -153,6 +168,13 @@ export const App: React.FC = () => {
                 </>
               )}
             </div>
+
+            <button
+              onClick={() => setActiveTab('practice')}
+              className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white transition-all shadow-md active:scale-95 flex items-center gap-1.5"
+            >
+              <span>📚 Opening Practice</span>
+            </button>
 
             <button
               onClick={() => setActiveTab('multiplayer')}
