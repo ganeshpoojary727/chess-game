@@ -1,11 +1,12 @@
 import React from 'react';
-import { Swords, Wifi, WifiOff, RefreshCw, Crown } from 'lucide-react';
+import { Swords, Wifi, WifiOff, RefreshCw, Crown, Cpu } from 'lucide-react';
 import { useChessGame } from './hooks/useChessGame';
 import { ChessBoardView } from './components/ChessBoardView';
 import { PlayerCard } from './components/PlayerCard';
 import { MoveHistory } from './components/MoveHistory';
 import { GameControls } from './components/GameControls';
 import { StatusBanner } from './components/StatusBanner';
+import { EngineEvaluationBar } from './components/practice/EngineEvaluationBar';
 
 import { MultiplayerRoomPage } from './pages/MultiplayerRoomPage';
 
@@ -39,10 +40,19 @@ export const App: React.FC = () => {
     handleReset,
     handleResign,
     toggleOrientation,
+    isEngineReady,
+    isStockfishThinking,
+    stockfishDifficulty,
+    setStockfishDifficulty,
+    difficultyPresets,
+    evaluation,
   } = useChessGame(urlGameId);
 
   const whitePlayerName = gameState?.whitePlayer?.name || 'White Player';
-  const blackPlayerName = isAiOpponent ? 'Stockfish (AI)' : (gameState?.blackPlayer?.name || 'Black Player');
+  const aiDisplayName = isStockfishThinking
+    ? 'Stockfish (Thinking...)'
+    : `Stockfish (${(difficultyPresets as any)?.[stockfishDifficulty]?.name || 'AI'})`;
+  const blackPlayerName = isAiOpponent ? aiDisplayName : (gameState?.blackPlayer?.name || 'Black Player');
 
   const topPlayer = orientation === 'white' ? {
     name: blackPlayerName,
@@ -174,18 +184,70 @@ export const App: React.FC = () => {
             errorMessage={errorMessage}
           />
 
-          {/* Interactive Chess Board */}
-          <ChessBoardView
-            fen={fen}
-            orientation={orientation}
-            selectedSquare={selectedSquare}
-            possibleMoves={possibleMoves}
-            lastMove={gameState?.lastMove}
-            inCheck={gameState?.inCheck}
-            sideToMove={gameState?.sideToMove}
-            onPieceDrop={onPieceDrop}
-            onSquareClick={onSquareClick}
-          />
+          {/* Stockfish AI Difficulty Selector */}
+          {isAiOpponent && (
+            <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-300">
+                  <Cpu className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Stockfish AI:</span>
+                </div>
+                {isEngineReady ? (
+                  <span className="flex items-center gap-1 text-[11px] text-emerald-400 font-semibold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    WASM Ready
+                  </span>
+                ) : (
+                  <span className="text-[11px] text-amber-400 font-semibold animate-pulse">Initializing Engine...</span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-1 flex-wrap">
+                {(['beginner', 'intermediate', 'advanced', 'master'] as const).map((lvl) => {
+                  const isSelected = stockfishDifficulty === lvl;
+                  const preset = (difficultyPresets as any)?.[lvl];
+                  return (
+                    <button
+                      key={lvl}
+                      onClick={() => setStockfishDifficulty(lvl)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                        isSelected
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm ring-1 ring-emerald-500/30'
+                          : 'bg-slate-800/60 text-slate-400 hover:text-slate-200 border border-slate-700/50'
+                      }`}
+                      title={preset?.description}
+                    >
+                      {preset?.name || lvl} <span className="opacity-60 text-[10px]">({preset?.elo})</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Interactive Chess Board with Evaluation Bar */}
+          <div className="flex items-center gap-3 w-full justify-center">
+            {/* Vertical Stockfish Evaluation Bar */}
+            <EngineEvaluationBar
+              evaluation={evaluation}
+              orientation={orientation}
+              isThinking={isStockfishThinking}
+            />
+
+            <div className="flex-1 max-w-[560px]">
+              <ChessBoardView
+                fen={fen}
+                orientation={orientation}
+                selectedSquare={selectedSquare}
+                possibleMoves={possibleMoves}
+                lastMove={gameState?.lastMove}
+                inCheck={gameState?.inCheck}
+                sideToMove={gameState?.sideToMove}
+                onPieceDrop={onPieceDrop}
+                onSquareClick={onSquareClick}
+              />
+            </div>
+          </div>
 
           {/* Bottom Player Card */}
           <PlayerCard

@@ -4,6 +4,7 @@ import { ConnectionState, GameStateResponse, MoveRequest, PlayerColor } from '..
 import { createGame, getGame } from '../services/api';
 import { wsService } from '../services/websocket';
 import confetti from 'canvas-confetti';
+import { useStockfish } from './useStockfish';
 
 export function useChessGame(initialGameId?: string) {
   const [chess] = useState<Chess>(() => new Chess());
@@ -14,7 +15,20 @@ export function useChessGame(initialGameId?: string) {
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [possibleMoves, setPossibleMoves] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isAiOpponent, setIsAiOpponent] = useState<boolean>(false);
+  const [isAiOpponent, setIsAiOpponent] = useState<boolean>(true);
+
+  // Stockfish WebAssembly integration
+  const {
+    isEngineReady,
+    isThinking: isStockfishThinking,
+    difficulty: stockfishDifficulty,
+    difficultyPresets,
+    setDifficulty: setStockfishDifficulty,
+    evaluation,
+    getEngineMove,
+    evaluatePosition,
+    stopThinking,
+  } = useStockfish();
 
   const activeGameIdRef = useRef<string | null>(initialGameId || null);
 
@@ -117,13 +131,41 @@ export function useChessGame(initialGameId?: string) {
     [chess]
   );
 
-  // Handle local AI move if AI mode enabled
-  const triggerAiMove = useCallback(() => {
+  // Handle local AI move with Stockfish WebAssembly engine
+  const triggerAiMove = useCallback(async () => {
     if (chess.isGameOver()) return;
+
+    try {
+      const best = await getEngineMove(chess.fen());
+      if (best && best.from && best.to) {
+        chess.move({
+          from: best.from as Square,
+          to: best.to as Square,
+          promotion: best.promotion || 'q',
+        });
+        const nextFen = chess.fen();
+        setFen(nextFen);
+        evaluatePosition(nextFen);
+
+        if (activeGameIdRef.current && connectionState === 'CONNECTED') {
+          const moveReq: MoveRequest = {
+            from: best.from,
+            to: best.to,
+            promotion: best.promotion,
+          };
+          wsService.sendMove(activeGameIdRef.current, moveReq);
+        } else if (chess.isCheckmate()) {
+          triggerCelebration();
+        }
+        return;
+      }
+    } catch (err) {
+      console.warn('Stockfish AI move error, falling back:', err);
+    }
+
+    // Fallback: random legal move if worker is busy or unavailable
     const moves = chess.moves({ verbose: true });
     if (moves.length === 0) return;
-
-    // Pick a random legal move or capture
     const captures = moves.filter((m) => m.captured);
     const selected = captures.length > 0
       ? captures[Math.floor(Math.random() * captures.length)]
@@ -131,7 +173,9 @@ export function useChessGame(initialGameId?: string) {
 
     setTimeout(() => {
       chess.move(selected);
-      setFen(chess.fen());
+      const nextFen = chess.fen();
+      setFen(nextFen);
+      evaluatePosition(nextFen);
       if (activeGameIdRef.current && connectionState === 'CONNECTED') {
         const moveReq: MoveRequest = {
           from: selected.from,
@@ -140,8 +184,8 @@ export function useChessGame(initialGameId?: string) {
         };
         wsService.sendMove(activeGameIdRef.current, moveReq);
       }
-    }, 400);
-  }, [chess, connectionState]);
+    }, 300);
+  }, [chess, connectionState, getEngineMove, evaluatePosition, triggerCelebration]);
 
   // Make move handler
   const makeMove = useCallback(
@@ -156,9 +200,13 @@ export function useChessGame(initialGameId?: string) {
 
         if (!move) return false;
 
-        setFen(chess.fen());
+        const nextFen = chess.fen();
+        setFen(nextFen);
         setSelectedSquare(null);
         setPossibleMoves([]);
+
+        // Evaluate position with Stockfish
+        evaluatePosition(nextFen);
 
         // Send to backend via WebSocket if connected
         if (activeGameIdRef.current && connectionState === 'CONNECTED') {
@@ -184,7 +232,7 @@ export function useChessGame(initialGameId?: string) {
         return false;
       }
     },
-    [chess, connectionState, isAiOpponent, triggerAiMove, triggerCelebration]
+    [chess, connectionState, isAiOpponent, triggerAiMove, triggerCelebration, evaluatePosition]
   );
 
   // Square click handling for point-and-click movement
@@ -268,5 +316,14 @@ export function useChessGame(initialGameId?: string) {
     handleReset,
     handleResign,
     toggleOrientation,
+    // Stockfish integration
+    isEngineReady,
+    isStockfishThinking,
+    stockfishDifficulty,
+    setStockfishDifficulty,
+    difficultyPresets,
+    evaluation,
+    evaluatePosition,
+    stopThinking,
   };
 }
