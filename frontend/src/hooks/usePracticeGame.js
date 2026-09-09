@@ -2,6 +2,12 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Chess } from 'chess.js';
 import { openingBook } from '../ai/openingBookEngine';
 import { useStockfish } from './useStockfish';
+import {
+  playMoveSound,
+  playCaptureSound,
+  playCheckSound,
+  playGameEndSound,
+} from '../utils/soundEffects';
 
 export function usePracticeGame(initialOpening = 'scotch-game', initialPlayerColor = 'b') {
   const [selectedOpening, setSelectedOpening] = useState(initialOpening);
@@ -73,6 +79,17 @@ export function usePracticeGame(initialOpening = 'scotch-game', initialPlayerCol
             type: 'book',
           });
 
+          // Audio feedback
+          if (chess.isGameOver()) {
+            playGameEndSound();
+          } else if (chess.inCheck()) {
+            playCheckSound();
+          } else if (moveRes.captured) {
+            playCaptureSound();
+          } else {
+            playMoveSound();
+          }
+
           // Run background evaluation
           evaluatePosition(newFen);
           return;
@@ -116,6 +133,18 @@ export function usePracticeGame(initialOpening = 'scotch-game', initialPlayerCol
           };
 
           setCoachCommentary((prev) => [...prev, commentObj]);
+
+          // Audio feedback
+          if (chess.isGameOver()) {
+            playGameEndSound();
+          } else if (chess.inCheck()) {
+            playCheckSound();
+          } else if (moveRes.captured) {
+            playCaptureSound();
+          } else {
+            playMoveSound();
+          }
+
           evaluatePosition(newFen);
         }
       }
@@ -175,6 +204,17 @@ export function usePracticeGame(initialOpening = 'scotch-game', initialPlayerCol
       setFen(newFen);
       setMoveHistory(newHistory);
       setLastMove({ from: move.from, to: move.to });
+
+      // Audio feedback
+      if (chess.isGameOver()) {
+        playGameEndSound();
+      } else if (chess.inCheck()) {
+        playCheckSound();
+      } else if (move.captured) {
+        playCaptureSound();
+      } else {
+        playMoveSound();
+      }
 
       // Check coach commentary for player's move
       const coachNote = openingBook.getCoachComment(selectedOpening, newHistory, newFen);

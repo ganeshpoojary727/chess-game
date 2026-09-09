@@ -5,6 +5,12 @@ import { createGame, getGame } from '../services/api';
 import { wsService } from '../services/websocket';
 import confetti from 'canvas-confetti';
 import { useStockfish } from './useStockfish';
+import {
+  playMoveSound,
+  playCaptureSound,
+  playCheckSound,
+  playGameEndSound,
+} from '../utils/soundEffects';
 
 export function useChessGame(initialGameId?: string) {
   const [chess] = useState<Chess>(() => new Chess());
@@ -138,7 +144,7 @@ export function useChessGame(initialGameId?: string) {
     try {
       const best = await getEngineMove(chess.fen());
       if (best && best.from && best.to) {
-        chess.move({
+        const aiMoveRes = chess.move({
           from: best.from as Square,
           to: best.to as Square,
           promotion: best.promotion || 'q',
@@ -146,6 +152,17 @@ export function useChessGame(initialGameId?: string) {
         const nextFen = chess.fen();
         setFen(nextFen);
         evaluatePosition(nextFen);
+
+        // Sound feedback
+        if (chess.isGameOver()) {
+          playGameEndSound();
+        } else if (chess.inCheck()) {
+          playCheckSound();
+        } else if (aiMoveRes && aiMoveRes.captured) {
+          playCaptureSound();
+        } else {
+          playMoveSound();
+        }
 
         if (activeGameIdRef.current && connectionState === 'CONNECTED') {
           const moveReq: MoveRequest = {
@@ -172,10 +189,21 @@ export function useChessGame(initialGameId?: string) {
       : moves[Math.floor(Math.random() * moves.length)];
 
     setTimeout(() => {
-      chess.move(selected);
+      const fallbackRes = chess.move(selected);
       const nextFen = chess.fen();
       setFen(nextFen);
       evaluatePosition(nextFen);
+
+      if (chess.isGameOver()) {
+        playGameEndSound();
+      } else if (chess.inCheck()) {
+        playCheckSound();
+      } else if (fallbackRes && fallbackRes.captured) {
+        playCaptureSound();
+      } else {
+        playMoveSound();
+      }
+
       if (activeGameIdRef.current && connectionState === 'CONNECTED') {
         const moveReq: MoveRequest = {
           from: selected.from,
@@ -204,6 +232,17 @@ export function useChessGame(initialGameId?: string) {
         setFen(nextFen);
         setSelectedSquare(null);
         setPossibleMoves([]);
+
+        // Sound feedback
+        if (chess.isGameOver()) {
+          playGameEndSound();
+        } else if (chess.inCheck()) {
+          playCheckSound();
+        } else if (move.captured) {
+          playCaptureSound();
+        } else {
+          playMoveSound();
+        }
 
         // Evaluate position with Stockfish
         evaluatePosition(nextFen);

@@ -61,8 +61,8 @@ export class ChessStompClient {
       },
       // Disable default fixed reconnect so we can manage exponential backoff
       reconnectDelay: 0,
-      heartbeatIncoming: 10000,
-      heartbeatOutgoing: 10000,
+      heartbeatIncoming: 25000,
+      heartbeatOutgoing: 25000,
 
       onConnect: (receipt) => {
         this.isConnected = true;
@@ -71,6 +71,24 @@ export class ChessStompClient {
           clearTimeout(this.reconnectTimer);
           this.reconnectTimer = null;
         }
+
+        // Active 25s ping interval to prevent cloud reverse-proxies (Render, Cloudflare, ALB) from terminating idle connections
+        if (this.heartbeatTimer) {
+          clearInterval(this.heartbeatTimer);
+        }
+        this.heartbeatTimer = setInterval(() => {
+          if (this.isConnected && this.client && this.client.active) {
+            try {
+              this.client.publish({
+                destination: '/app/heartbeat',
+                body: JSON.stringify({ ping: Date.now() }),
+                skipContentLengthHeader: true,
+              });
+            } catch (e) {
+              // Ignore heartbeat network drops handled by reconnect
+            }
+          }
+        }, 25000);
 
         if (this.onConnectionChangeCallback) {
           this.onConnectionChangeCallback(true);
@@ -87,6 +105,10 @@ export class ChessStompClient {
 
       onDisconnect: () => {
         this.isConnected = false;
+        if (this.heartbeatTimer) {
+          clearInterval(this.heartbeatTimer);
+          this.heartbeatTimer = null;
+        }
         if (this.onConnectionChangeCallback) {
           this.onConnectionChangeCallback(false);
         }
@@ -104,6 +126,10 @@ export class ChessStompClient {
 
       onWebSocketClose: (event) => {
         this.isConnected = false;
+        if (this.heartbeatTimer) {
+          clearInterval(this.heartbeatTimer);
+          this.heartbeatTimer = null;
+        }
         if (this.onConnectionChangeCallback) {
           this.onConnectionChangeCallback(false);
         }
@@ -321,6 +347,10 @@ export class ChessStompClient {
    */
   disconnect() {
     this.manuallyDisconnected = true;
+    if (this.heartbeatTimer) {
+      clearInterval(this.heartbeatTimer);
+      this.heartbeatTimer = null;
+    }
     if (this.reconnectTimer) {
       clearTimeout(this.reconnectTimer);
       this.reconnectTimer = null;

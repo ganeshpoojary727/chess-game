@@ -4,10 +4,20 @@ import { PlayerCard } from '../components/multiplayer/PlayerCard';
 import { MultiplayerBoard } from '../components/multiplayer/MultiplayerBoard';
 import { RoomLobby } from '../components/multiplayer/RoomLobby';
 import { GameEndModal } from '../components/multiplayer/GameEndModal';
+import { MoveHistoryTable, ResignConfirmModal, DrawOfferModal } from '../components/game';
+import {
+  playMoveSound,
+  playCaptureSound,
+  playCheckSound,
+  playGameEndSound,
+  isMuted,
+  toggleMute,
+} from '../utils/soundEffects';
 import {
   Flag,
   Handshake,
   RotateCcw,
+  RotateCw,
   LogOut,
   Wifi,
   WifiOff,
@@ -49,7 +59,11 @@ export function MultiplayerRoomPage() {
   const [copiedCode, setCopiedCode] = useState(false);
   const [showResignConfirm, setShowResignConfirm] = useState(false);
   const [drawOfferSent, setDrawOfferSent] = useState(false);
+  const [muted, setMutedState] = useState(() => isMuted());
+  const [boardFlipped, setBoardFlipped] = useState(false);
   const moveScrollRef = useRef(null);
+  const prevMoveCount = useRef(0);
+  const prevGameOver = useRef(false);
 
   // Auto-check URL parameters for ?room=ROOMCODE
   useEffect(() => {
@@ -60,12 +74,59 @@ export function MultiplayerRoomPage() {
     }
   }, [roomCode, joinRoom]);
 
-  // Auto-scroll move history
+  // Sound Effects Integration
   useEffect(() => {
-    if (moveScrollRef.current) {
-      moveScrollRef.current.scrollTop = moveScrollRef.current.scrollHeight;
+    const currentCount = gameState.moveHistory?.length || 0;
+    const isOver = Boolean(gameState.isGameOver);
+
+    if (currentCount > prevMoveCount.current) {
+      const lastMove = gameState.moveHistory[currentCount - 1];
+      const lastSan = typeof lastMove === 'string' ? lastMove : lastMove?.san || '';
+
+      if (isOver) {
+        playGameEndSound();
+      } else if (gameState.isCheck) {
+        playCheckSound();
+      } else if (lastSan.includes('x')) {
+        playCaptureSound();
+      } else {
+        playMoveSound();
+      }
+    } else if (isOver && !prevGameOver.current) {
+      playGameEndSound();
     }
-  }, [gameState.moveHistory?.length]);
+
+    prevMoveCount.current = currentCount;
+    prevGameOver.current = isOver;
+  }, [gameState.moveHistory, gameState.isGameOver, gameState.isCheck]);
+
+  // Keyboard Shortcuts: Z (flip board), M (mute audio), Escape (dismiss modals)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const tag = e.target?.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || e.target?.isContentEditable) {
+        return;
+      }
+
+      if (e.key === 'z' || e.key === 'Z') {
+        e.preventDefault();
+        setBoardFlipped((f) => !f);
+      } else if (e.key === 'm' || e.key === 'M') {
+        e.preventDefault();
+        setMutedState(toggleMute());
+      } else if (e.key === 'Escape') {
+        if (showResignConfirm) {
+          setShowResignConfirm(false);
+        }
+        if (errorMessage) {
+          clearError();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showResignConfirm, errorMessage, clearError]);
 
   const handleCopyCode = async () => {
     if (!roomCode) return;
@@ -79,13 +140,7 @@ export function MultiplayerRoomPage() {
   };
 
   const handleResignClick = () => {
-    if (showResignConfirm) {
-      resign();
-      setShowResignConfirm(false);
-    } else {
-      setShowResignConfirm(true);
-      setTimeout(() => setShowResignConfirm(false), 5000);
-    }
+    setShowResignConfirm(true);
   };
 
   const handleOfferDraw = () => {
@@ -94,45 +149,33 @@ export function MultiplayerRoomPage() {
     setTimeout(() => setDrawOfferSent(false), 4000);
   };
 
-  // Determine top (opponent) and bottom (local) player representations
-  const isWhite = playerColor === 'w';
-  const isBlack = playerColor === 'b';
+  // Determine effective orientation (honors 'Z' flip)
+  const effectiveOrientation = boardFlipped
+    ? (playerColor === 'b' ? 'w' : 'b')
+    : (playerColor || 'w');
 
-  // Bottom player is local player if assigned, else White
-  const bottomPlayer = isBlack ? gameState.blackPlayer : gameState.whitePlayer;
-  const bottomColor = isBlack ? 'b' : 'w';
-  const bottomClocks = isBlack ? clocks.blackMs : clocks.whiteMs;
-  const bottomCaptures = isBlack ? captured.blackCaptures : captured.whiteCaptures;
-  const bottomAdvantage = isBlack
+  const isViewingBlackAtBottom = effectiveOrientation === 'b';
+
+  // Bottom player
+  const bottomPlayer = isViewingBlackAtBottom ? gameState.blackPlayer : gameState.whitePlayer;
+  const bottomColor = isViewingBlackAtBottom ? 'b' : 'w';
+  const bottomClocks = isViewingBlackAtBottom ? clocks.blackMs : clocks.whiteMs;
+  const bottomCaptures = isViewingBlackAtBottom ? captured.blackCaptures : captured.whiteCaptures;
+  const bottomAdvantage = isViewingBlackAtBottom
     ? (captured.materialDiff < 0 ? Math.abs(captured.materialDiff) : 0)
     : (captured.materialDiff > 0 ? captured.materialDiff : 0);
 
   // Top player is opponent
-  const topPlayer = isBlack ? gameState.whitePlayer : gameState.blackPlayer;
-  const topColor = isBlack ? 'w' : 'b';
-  const topClocks = isBlack ? clocks.whiteMs : clocks.blackMs;
-  const topCaptures = isBlack ? captured.whiteCaptures : captured.blackCaptures;
-  const topAdvantage = isBlack
+  const topPlayer = isViewingBlackAtBottom ? gameState.whitePlayer : gameState.blackPlayer;
+  const topColor = isViewingBlackAtBottom ? 'w' : 'b';
+  const topClocks = isViewingBlackAtBottom ? clocks.whiteMs : clocks.blackMs;
+  const topCaptures = isViewingBlackAtBottom ? captured.whiteCaptures : captured.blackCaptures;
+  const topAdvantage = isViewingBlackAtBottom
     ? (captured.materialDiff > 0 ? captured.materialDiff : 0)
     : (captured.materialDiff < 0 ? Math.abs(captured.materialDiff) : 0);
 
   const isMyTurn = playerColor ? gameState.turn === playerColor : false;
-
-  // Group move history into pairs
-  const movePairs = [];
   const history = gameState.moveHistory || [];
-  const formatMove = (m) => {
-    if (!m) return '';
-    if (typeof m === 'string') return m;
-    return m.san || (m.from && m.to ? `${m.from}-${m.to}` : '');
-  };
-  for (let i = 0; i < history.length; i += 2) {
-    movePairs.push({
-      num: Math.floor(i / 2) + 1,
-      white: formatMove(history[i]),
-      black: formatMove(history[i + 1]),
-    });
-  }
 
   // Active game or finished game view
   const inGameView = roomCode && gameState.status !== 'WAITING';
@@ -198,8 +241,33 @@ export function MultiplayerRoomPage() {
             </div>
           )}
 
-          {/* Right Info: Connection Dot & Leave Button */}
-          <div className="flex items-center gap-3">
+          {/* Right Info: Audio Toggle, Flip Board, Connection Dot & Leave Button */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Audio Toggle */}
+            <button
+              onClick={() => setMutedState(toggleMute())}
+              className="p-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all active:scale-95 flex items-center justify-center"
+              title={muted ? 'Unmute Sound (M)' : 'Mute Sound (M)'}
+            >
+              {muted ? (
+                <VolumeX className="w-4 h-4 text-rose-400" />
+              ) : (
+                <Volume2 className="w-4 h-4 text-emerald-400" />
+              )}
+            </button>
+
+            {/* Flip Board (Z) */}
+            {inGameView && (
+              <button
+                onClick={() => setBoardFlipped((f) => !f)}
+                className="p-1.5 px-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all active:scale-95 flex items-center gap-1 text-xs"
+                title="Flip Board View (Z)"
+              >
+                <RotateCw className="w-3.5 h-3.5 text-indigo-400" />
+                <span className="hidden sm:inline font-mono text-[10px] text-slate-400">Z</span>
+              </button>
+            )}
+
             <div className="flex items-center gap-1.5 text-xs">
               {connected ? (
                 <span className="flex items-center gap-1 text-emerald-400">
@@ -246,30 +314,6 @@ export function MultiplayerRoomPage() {
           </div>
         )}
 
-        {/* Draw Offer Notification Banner */}
-        {drawOffer && gameState.status === 'ACTIVE' && (
-          <div className="mb-4 max-w-md mx-auto w-full p-3.5 rounded-2xl bg-indigo-950/90 border border-indigo-500 text-indigo-100 text-sm flex items-center justify-between shadow-xl animate-fade-in">
-            <div className="flex items-center gap-2">
-              <Handshake className="w-5 h-5 text-indigo-400 animate-bounce" />
-              <span>Opponent has offered a draw!</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={acceptDraw}
-                className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow transition-all"
-              >
-                Accept
-              </button>
-              <button
-                onClick={declineDraw}
-                className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition-all"
-              >
-                Decline
-              </button>
-            </div>
-          </div>
-        )}
-
         {!inGameView ? (
           /* Lobby / Waiting View */
           <div className="my-auto py-4 sm:py-8">
@@ -313,7 +357,7 @@ export function MultiplayerRoomPage() {
               <MultiplayerBoard
                 fen={gameState.fen}
                 chess={chess}
-                playerColor={playerColor}
+                playerColor={effectiveOrientation}
                 isMyTurn={isMyTurn}
                 gameStatus={gameState.status}
                 isCheck={gameState.isCheck}
@@ -361,46 +405,11 @@ export function MultiplayerRoomPage() {
                 </div>
               </div>
 
-              {/* Move History Panel */}
-              <div className="flex-1 flex flex-col glass-panel rounded-2xl border border-slate-800/80 overflow-hidden min-h-[260px] max-h-[420px]">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800/80 bg-slate-900/60">
-                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-300">
-                    <ScrollText className="w-4 h-4 text-emerald-400" />
-                    <span>Move Log ({history.length})</span>
-                  </div>
-                  <span className="text-[10px] text-slate-500 font-mono">
-                    {history.length > 0 ? `Move ${Math.ceil(history.length / 2)}` : 'Starting position'}
-                  </span>
-                </div>
-
-                <div
-                  ref={moveScrollRef}
-                  className="flex-1 overflow-y-auto p-3 space-y-1 font-mono text-xs select-text"
-                >
-                  {movePairs.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-36 text-slate-500 text-xs">
-                      <span>No moves made yet</span>
-                    </div>
-                  ) : (
-                    movePairs.map((pair) => (
-                      <div
-                        key={pair.num}
-                        className="grid grid-cols-12 py-1 px-2 rounded hover:bg-slate-800/40 transition-colors"
-                      >
-                        <span className="col-span-2 text-slate-500 font-bold">{pair.num}.</span>
-                        <span className="col-span-5 text-slate-200 font-semibold">{pair.white}</span>
-                        <span className="col-span-5 text-slate-300">{pair.black || ''}</span>
-                      </div>
-                    ))
-                  )}
-                </div>
-
-                {/* FEN snapshot */}
-                <div className="px-3 py-2 border-t border-slate-800/80 bg-slate-950/70 text-[10px] font-mono text-slate-500 truncate">
-                  <span className="text-slate-400 font-semibold mr-1">FEN:</span>
-                  <span title={gameState.fen}>{gameState.fen}</span>
-                </div>
-              </div>
+              {/* Move History Sheet */}
+              <MoveHistoryTable
+                history={history}
+                className="flex-1 min-h-[260px] max-h-[420px]"
+              />
 
               {/* In-Game Action Bar */}
               {gameState.status === 'ACTIVE' && (
@@ -416,14 +425,10 @@ export function MultiplayerRoomPage() {
 
                   <button
                     onClick={handleResignClick}
-                    className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-bold transition-all active:scale-95 border ${
-                      showResignConfirm
-                        ? 'bg-rose-600 hover:bg-rose-500 text-white border-rose-500 animate-pulse'
-                        : 'bg-slate-900 hover:bg-rose-950/50 text-slate-300 hover:text-rose-300 border-slate-800 hover:border-rose-800/70'
-                    }`}
+                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-rose-950/50 text-slate-300 hover:text-rose-300 border border-slate-800 hover:border-rose-800/70 text-xs font-bold transition-all active:scale-95"
                   >
                     <Flag className="w-3.5 h-3.5 text-rose-400" />
-                    <span>{showResignConfirm ? 'Confirm Resign?' : 'Resign'}</span>
+                    <span>Resign</span>
                   </button>
                 </div>
               )}
@@ -442,6 +447,24 @@ export function MultiplayerRoomPage() {
           </div>
         )}
       </main>
+
+      {/* Resign Confirmation Modal */}
+      <ResignConfirmModal
+        isOpen={showResignConfirm}
+        onConfirm={() => {
+          resign();
+          setShowResignConfirm(false);
+        }}
+        onClose={() => setShowResignConfirm(false)}
+      />
+
+      {/* Draw Offer Modal */}
+      <DrawOfferModal
+        isOpen={Boolean(drawOffer && gameState.status === 'ACTIVE')}
+        opponentName={topPlayer?.name || 'Opponent'}
+        onAccept={acceptDraw}
+        onDecline={declineDraw}
+      />
 
       {/* Game End Modal */}
       <GameEndModal

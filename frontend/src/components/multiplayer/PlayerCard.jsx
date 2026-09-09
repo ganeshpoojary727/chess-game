@@ -1,12 +1,7 @@
 import React from 'react';
 import { User, Wifi, WifiOff, Shield } from 'lucide-react';
 import { ChessClock } from './ChessClock';
-
-// Unicode symbols for captured pieces display
-const UNICODE_PIECES = {
-  w: { p: '♙', n: '♘', b: '♗', r: '♖', q: '♕', k: '♔' },
-  b: { p: '♟', n: '♞', b: '♝', r: '♜', q: '♛', k: '♚' }
-};
+import { CapturedPieces } from '../game/CapturedPieces';
 
 export function PlayerCard({
   player,
@@ -95,20 +90,12 @@ export function PlayerCard({
 
             {/* Captured pieces */}
             {capturedPieces.length > 0 && (
-              <div className="flex items-center gap-1 mt-1 text-slate-300 flex-wrap">
-                <span className="text-xs sm:text-sm tracking-tight opacity-90">
-                  {capturedPieces.map((p, idx) => (
-                    <span key={idx} className="mr-0.5">
-                      {UNICODE_PIECES[opponentColor]?.[p] || p}
-                    </span>
-                  ))}
-                </span>
-                {materialAdvantage > 0 && (
-                  <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 px-1 py-0.2 rounded border border-emerald-800/60">
-                    +{materialAdvantage}
-                  </span>
-                )}
-              </div>
+              <CapturedPieces
+                pieces={capturedPieces}
+                playerColor={isWhite ? 'white' : 'black'}
+                materialAdvantage={materialAdvantage}
+                className="mt-1"
+              />
             )}
           </div>
         </div>
