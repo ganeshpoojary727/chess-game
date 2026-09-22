@@ -18,12 +18,12 @@ export const GlassCard: React.FC<GlassCardProps> = ({
   return (
     <div
       className={clsx(
-        'relative rounded-[20px] p-6 backdrop-blur-xl transition-all duration-300',
+        'relative rounded-2xl p-6 transition-all duration-300',
         elevated
-          ? 'bg-[rgba(255,255,255,0.055)] border border-[rgba(255,255,255,0.12)]'
-          : 'bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.08)]',
+          ? 'bg-[#ffffff] border border-[#e8e4db] shadow-md'
+          : 'bg-[#fbfaf7] border border-[rgba(0,0,0,0.06)] shadow-[0_10px_30px_-5px_rgba(0,0,0,0.04),0_4px_12px_-2px_rgba(0,0,0,0.02)]',
         hoverEffect &&
-          'hover:bg-[rgba(255,255,255,0.05)] hover:border-[rgba(201,168,106,0.35)] hover:shadow-[0_12px_36px_-8px_rgba(0,0,0,0.7)]',
+          'hover:shadow-[0_16px_36px_-6px_rgba(0,0,0,0.07),0_6px_16px_-2px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:border-[rgba(181,73,60,0.25)]',
         className
       )}
       {...props}

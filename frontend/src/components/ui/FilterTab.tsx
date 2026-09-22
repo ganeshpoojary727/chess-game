@@ -22,7 +22,7 @@ export const FilterTab: React.FC<FilterTabProps> = ({
   return (
     <div
       className={clsx(
-        'flex items-center gap-1.5 p-1 rounded-full bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.08)] overflow-x-auto scrollbar-none',
+        'flex items-center gap-1.5 p-1 rounded-full bg-[#f7f5f0] border border-[#e8e4db] overflow-x-auto scrollbar-none',
         className
       )}
     >
@@ -36,8 +36,8 @@ export const FilterTab: React.FC<FilterTabProps> = ({
             className={clsx(
               'px-3.5 py-1.5 rounded-full text-xs font-sans font-medium transition-all duration-200 whitespace-nowrap select-none',
               isActive
-                ? 'bg-[#f5f5f7] text-[#0a0a0d] shadow-sm font-semibold'
-                : 'text-[#8e8e93] hover:text-[#f5f5f7] hover:bg-[rgba(255,255,255,0.05)]'
+                ? 'bg-[#b5493c] text-white shadow-sm font-semibold'
+                : 'text-[#6b6b6b] hover:text-[#1c1c1c] hover:bg-[#ede9e1]'
             )}
           >
             {tab.label}

@@ -33,25 +33,24 @@ export const CheckmateNavbar: React.FC<CheckmateNavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#0a0a0d]/85 border-b border-[rgba(255,255,255,0.06)] px-4 sm:px-8 py-3.5 transition-all">
+    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#f5f2ec]/90 border-b border-[#e8e4db] px-4 sm:px-8 py-3.5 transition-all">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         {/* LEFT: Crown Logo & Wordmark */}
         <div
-          className="flex items-center gap-3 cursor-pointer select-none shrink-0"
+          className="flex items-center gap-2.5 cursor-pointer select-none shrink-0 group"
           onClick={() => handleLinkClick('home')}
         >
-          <div className="flex items-center justify-center w-8 h-8 text-[#f5f5f7]">
-            {/* Custom Crown Icon with Cross */}
+          <div className="flex items-center justify-center w-8 h-8 text-[#1c1c1c] transition-transform duration-300 group-hover:scale-105">
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
               <path d="M11 2h2v2h-2V2zm-1 3h4v1.5h-4V5zm-6 3l3.5 4 4.5-4 4.5 4L20 8l-2 11H6L4 8zm3.5 9h9v1h-9v-1z" />
             </svg>
           </div>
-          <span className="font-sans font-bold tracking-[0.25em] text-sm text-[#f5f5f7] uppercase">
+          <span className="font-sans font-bold tracking-[0.25em] text-sm text-[#1c1c1c] uppercase">
             CHECKMATE
           </span>
         </div>
 
-        {/* CENTER-LEFT: Desktop Nav Links with Active Underline & Dot */}
+        {/* CENTER: Nav Links with Red Underline + Red Dot */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-sans font-medium">
           {navLinks.map((link) => {
             const isActive = activeTab === link.id;
@@ -62,17 +61,17 @@ export const CheckmateNavbar: React.FC<CheckmateNavbarProps> = ({
                 className={clsx(
                   'relative py-1 tracking-wider uppercase text-xs transition-colors duration-200 select-none',
                   isActive
-                    ? 'text-[#f5f5f7] font-semibold'
-                    : 'text-[#8e8e93] hover:text-[#f5f5f7]'
+                    ? 'text-[#1c1c1c] font-bold'
+                    : 'text-[#6b6b6b] hover:text-[#1c1c1c]'
                 )}
               >
                 {link.label}
 
-                {/* Active Indicator: Underline + Golden Dot */}
+                {/* Active Indicator: Terracotta Red Underline + Center Dot */}
                 {isActive && (
                   <span className="absolute -bottom-1.5 inset-x-0 flex flex-col items-center">
-                    <span className="w-full h-[1.5px] bg-gradient-to-r from-transparent via-[#c9a86a] to-transparent" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#c9a86a] -mt-1 shadow-[0_0_8px_#c9a86a]" />
+                    <span className="w-full h-[1.5px] bg-[#b5493c]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#b5493c] -mt-1 shadow-sm" />
                   </span>
                 )}
               </button>
@@ -83,41 +82,41 @@ export const CheckmateNavbar: React.FC<CheckmateNavbarProps> = ({
         {/* RIGHT: Search, Notifications, Profile Avatar & Mobile Toggle */}
         <div className="flex items-center gap-3 sm:gap-4 shrink-0">
           {/* Search Input Bar */}
-          <div className="hidden lg:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)] focus-within:border-[#c9a86a]/50 focus-within:bg-[rgba(255,255,255,0.07)] transition-all w-60 xl:w-72">
-            <Search className="w-3.5 h-3.5 text-[#8e8e93] shrink-0" />
+          <div className="hidden lg:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/80 border border-[#e8e4db] focus-within:border-[#b5493c] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#b5493c]/10 transition-all w-60 xl:w-72 shadow-sm">
+            <Search className="w-3.5 h-3.5 text-[#6b6b6b] shrink-0" />
             <input
               type="text"
               placeholder="Search players, openings, games..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent text-xs text-[#f5f5f7] placeholder-[#545458] focus:outline-none w-full font-sans"
+              className="bg-transparent text-xs text-[#1c1c1c] placeholder-[#8e8b82] focus:outline-none w-full font-sans"
             />
           </div>
 
-          {/* Notification Bell with Gold Unread Badge */}
+          {/* Notification Bell with Red Unread Dot */}
           <button
             type="button"
             aria-label="Notifications"
-            className="relative p-2 rounded-full text-[#8e8e93] hover:text-[#f5f5f7] hover:bg-white/[0.05] transition-colors"
+            className="relative p-2 rounded-full text-[#6b6b6b] hover:text-[#1c1c1c] hover:bg-black/5 transition-colors"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#c9a86a] ring-2 ring-[#0a0a0d]" />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#b5493c] ring-2 ring-[#f5f2ec]" />
           </button>
 
-          {/* Profile Badge (Avatar + Name + Online Dot) */}
+          {/* User Profile Pill */}
           <button
             type="button"
             onClick={onOpenProfile}
-            className="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-full bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.08)] hover:border-[#c9a86a]/40 transition-colors"
+            className="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-full bg-white/70 border border-[#e8e4db] hover:border-[#b5493c]/40 hover:bg-white transition-colors shadow-sm"
           >
-            <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#18181f] border border-white/10 text-xs font-bold text-[#f5f5f7]">
+            <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#b5493c] text-white text-xs font-bold shadow-sm">
               G
             </div>
             <div className="hidden sm:flex flex-col text-left leading-none">
-              <span className="text-xs font-semibold text-[#f5f5f7]">Ganesh</span>
+              <span className="text-xs font-semibold text-[#1c1c1c]">Ganesh</span>
               <div className="flex items-center gap-1 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[10px] text-[#8e8e93]">Online</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[10px] text-[#6b6b6b]">Online</span>
               </div>
             </div>
           </button>
@@ -127,7 +126,7 @@ export const CheckmateNavbar: React.FC<CheckmateNavbarProps> = ({
             type="button"
             aria-label="Toggle Navigation Menu"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl text-[#8e8e93] hover:text-[#f5f5f7] hover:bg-white/5 transition-colors"
+            className="md:hidden p-2 rounded-xl text-[#6b6b6b] hover:text-[#1c1c1c] hover:bg-black/5 transition-colors"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -136,16 +135,16 @@ export const CheckmateNavbar: React.FC<CheckmateNavbarProps> = ({
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden mt-3 pt-3 border-t border-white/10 flex flex-col gap-2 pb-2">
+        <div className="md:hidden mt-3 pt-3 border-t border-[#e8e4db] flex flex-col gap-2 pb-2">
           {navLinks.map((link) => (
             <button
               key={link.id}
               onClick={() => handleLinkClick(link.id)}
               className={clsx(
-                'text-left px-3 py-2 rounded-xl text-sm font-sans tracking-wide uppercase',
+                'text-left px-3 py-2 rounded-lg text-xs font-medium uppercase tracking-wider',
                 activeTab === link.id
-                  ? 'bg-[#c9a86a]/15 text-[#c9a86a] font-semibold'
-                  : 'text-[#8e8e93] hover:bg-white/5 hover:text-white'
+                  ? 'bg-[#b5493c]/10 text-[#b5493c] font-bold'
+                  : 'text-[#6b6b6b] hover:text-[#1c1c1c]'
               )}
             >
               {link.label}

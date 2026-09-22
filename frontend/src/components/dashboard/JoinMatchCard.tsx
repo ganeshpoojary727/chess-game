@@ -32,11 +32,9 @@ export const JoinMatchCard: React.FC<JoinMatchCardProps> = ({ onJoinRoom }) => {
     setErrorMessage(null);
 
     try {
-      // Validate existence against the backend REST endpoint
       await getRoom(clean);
       onJoinRoom?.(clean);
     } catch (err: any) {
-      // If room not found on server, check if user still wants to connect directly
       console.warn('Backend room check warning:', err.message);
       onJoinRoom?.(clean);
     } finally {
@@ -48,24 +46,24 @@ export const JoinMatchCard: React.FC<JoinMatchCardProps> = ({ onJoinRoom }) => {
     <GlassCard className="flex flex-col justify-between h-full">
       <div>
         {/* Header */}
-        <div className="flex items-start gap-3.5 mb-6">
+        <div className="flex items-start gap-3.5 mb-5">
           <IconBadge>
-            <Users className="w-5 h-5 text-[#c9a86a]" />
+            <Users className="w-5 h-5 text-white" />
           </IconBadge>
           <div>
-            <h2 className="text-xl font-serif font-semibold text-[#f5f5f7] tracking-tight">
+            <h2 className="text-xl font-sans font-bold text-[#1c1c1c] tracking-tight">
               Join Match
             </h2>
-            <p className="text-xs font-sans text-[#8e8e93] mt-0.5">
+            <p className="text-xs font-sans text-[#6b6b6b] mt-0.5">
               Enter a room code to join a game
             </p>
           </div>
         </div>
 
         {/* Room Code Input Field */}
-        <form onSubmit={handleJoin} className="mb-6">
+        <form onSubmit={handleJoin} className="mb-5">
           <div className="relative flex items-center">
-            <div className="absolute left-3.5 text-[#8e8e93] pointer-events-none">
+            <div className="absolute left-3.5 text-[#6b6b6b] pointer-events-none">
               <LinkIcon className="w-4 h-4" />
             </div>
 
@@ -78,19 +76,19 @@ export const JoinMatchCard: React.FC<JoinMatchCardProps> = ({ onJoinRoom }) => {
                 if (errorMessage) setErrorMessage(null);
               }}
               maxLength={12}
-              className="w-full pl-10 pr-4 py-3 rounded-xl bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)] text-sm font-sans font-medium text-[#f5f5f7] placeholder-[#545458] focus:outline-none focus:border-[#c9a86a]/60 focus:bg-[rgba(255,255,255,0.07)] transition-all uppercase tracking-wider"
+              className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#f7f5f0] border border-[#e8e4db] text-sm font-sans font-medium text-[#1c1c1c] placeholder-[#8e8b82] focus:outline-none focus:border-[#b5493c] focus:bg-white focus:ring-2 focus:ring-[#b5493c]/10 transition-all uppercase tracking-wider shadow-sm"
             />
           </div>
 
           {errorMessage && (
-            <p className="text-xs text-rose-400 mt-2 ml-1 font-sans">{errorMessage}</p>
+            <p className="text-xs text-rose-600 mt-2 ml-1 font-sans">{errorMessage}</p>
           )}
         </form>
       </div>
 
-      {/* Full-width Outlined Pill Button */}
+      {/* Full-width Warm Sand Pill Button */}
       <PillButton
-        variant="outline"
+        variant="sand"
         icon={<LogIn className="w-3.5 h-3.5" />}
         onClick={handleJoin}
         disabled={loading}

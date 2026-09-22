@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import CheckmateNavbar from '../components/layout/CheckmateNavbar';
-import HeroKnights from '../components/hero/HeroKnights';
+import HeroPanel from '../components/hero/HeroPanel';
 import HostMatchCard from '../components/dashboard/HostMatchCard';
 import JoinMatchCard from '../components/dashboard/JoinMatchCard';
 import PracticeOpeningsCard from '../components/dashboard/PracticeOpeningsCard';
 import PlayerProfileCard from '../components/dashboard/PlayerProfileCard';
 import DashboardFooter from '../components/layout/DashboardFooter';
+import CornerSilhouettes from '../components/layout/CornerSilhouettes';
+import PerspectiveFloor from '../components/hero/PerspectiveFloor';
 import UserProfileModal from '../components/modals/UserProfileModal';
 
 interface CheckmateDashboardProps {
@@ -19,7 +21,7 @@ export const CheckmateDashboard: React.FC<CheckmateDashboardProps> = ({
   onStartPractice,
   onNavigateLanding,
 }) => {
-  const [activeNavTab, setActiveNavTab] = useState('dashboard');
+  const [activeNavTab, setActiveNavTab] = useState('home');
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const handleNavTabChange = (tab: string) => {
@@ -27,7 +29,6 @@ export const CheckmateDashboard: React.FC<CheckmateDashboardProps> = ({
     if (tab === 'home') {
       onNavigateLanding?.();
     } else if (tab === 'play') {
-      // Direct jump to match host or lobby
       const code = Math.random().toString(36).substring(2, 8).toUpperCase();
       onJoinRoom(code);
     } else if (tab === 'learn') {
@@ -38,21 +39,22 @@ export const CheckmateDashboard: React.FC<CheckmateDashboardProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0d] text-[#f5f5f7] flex flex-col justify-between selection:bg-[#c9a86a] selection:text-[#0a0a0d] relative overflow-x-hidden">
-      {/* Background Subtle Ambience Glows */}
-      <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-gradient-to-b from-[#c9a86a]/[0.03] to-transparent rounded-full filter blur-[120px] pointer-events-none -z-10" />
-      <div className="fixed bottom-0 right-1/4 w-[600px] h-[600px] bg-gradient-to-t from-white/[0.02] to-transparent rounded-full filter blur-[140px] pointer-events-none -z-10" />
+    <div className="min-h-screen bg-[#f5f2ec] text-[#1c1c1c] flex flex-col justify-between selection:bg-[#b5493c] selection:text-white relative overflow-x-hidden">
+      {/* 1. Background Rocky Silhouette Motif in Bottom Corners */}
+      <CornerSilhouettes />
 
-      {/* 1. Header Navigation Bar */}
+      {/* 2. Receding Perspective Chessboard Floor */}
+      <PerspectiveFloor />
+
+      {/* 3. Header Navigation Bar */}
       <CheckmateNavbar
         activeTab={activeNavTab}
         onTabChange={handleNavTabChange}
         onOpenProfile={() => setIsProfileModalOpen(true)}
       />
 
-      {/* 2. Main Dashboard Stage */}
-      <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 flex flex-col justify-center">
-        {/* On Desktop: 3 Columns (Left 2 cards, Center Hero, Right 2 cards) */}
+      {/* 4. Main Dashboard Stage */}
+      <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 lg:py-7 flex flex-col justify-center relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           {/* LEFT COLUMN: Host Match & Join Match */}
           <div className="order-2 lg:order-1 lg:col-span-3 flex flex-col gap-6">
@@ -60,9 +62,9 @@ export const CheckmateDashboard: React.FC<CheckmateDashboardProps> = ({
             <JoinMatchCard onJoinRoom={onJoinRoom} />
           </div>
 
-          {/* CENTER COLUMN: Hero Section (Eyebrow, Headline, Zero-Raster SVG Knights, 3D Floor) */}
+          {/* CENTER COLUMN: Hero Section (Eyebrow, Headline, Blended Dual Knights Photo, Taglines) */}
           <div className="order-1 lg:order-2 lg:col-span-6 flex flex-col items-center justify-center my-2 lg:my-0">
-            <HeroKnights />
+            <HeroPanel />
           </div>
 
           {/* RIGHT COLUMN: Practice Openings & Player Profile */}
@@ -77,10 +79,10 @@ export const CheckmateDashboard: React.FC<CheckmateDashboardProps> = ({
         </div>
       </main>
 
-      {/* 3. Footer Bar */}
+      {/* 5. Footer Line Elements */}
       <DashboardFooter />
 
-      {/* 4. Profile & Stats Modal */}
+      {/* 6. Profile & Stats Modal */}
       <UserProfileModal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}

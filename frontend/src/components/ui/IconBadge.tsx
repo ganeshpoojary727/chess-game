@@ -13,15 +13,15 @@ export const IconBadge: React.FC<IconBadgeProps> = ({
   className = '',
 }) => {
   const sizeClasses = {
-    sm: 'w-9 h-9 rounded-xl',
-    md: 'w-11 h-11 rounded-2xl',
-    lg: 'w-14 h-14 rounded-2xl',
+    sm: 'w-9 h-9 rounded-lg',
+    md: 'w-11 h-11 rounded-xl',
+    lg: 'w-13 h-13 rounded-2xl',
   };
 
   return (
     <div
       className={clsx(
-        'flex items-center justify-center bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)] text-[#c9a86a] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]',
+        'flex items-center justify-center bg-[#b5493c] text-white shadow-sm transition-transform duration-200 group-hover:scale-105 shrink-0',
         sizeClasses[size],
         className
       )}

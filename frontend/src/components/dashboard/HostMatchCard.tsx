@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Crown, User, Clock, Grid, Globe, Play } from 'lucide-react';
+import { Crown, Zap, Clock, Grid, Globe, Play } from 'lucide-react';
 import GlassCard from '../ui/GlassCard';
 import IconBadge from '../ui/IconBadge';
 import PillButton from '../ui/PillButton';
@@ -33,7 +33,7 @@ export const HostMatchCard: React.FC<HostMatchCardProps> = ({ onRoomCreated }) =
 
   const boardStyleOptions: SelectOption[] = [
     { value: 'classic', label: 'Classic' },
-    { value: 'midnight', label: 'Midnight Obsidian' },
+    { value: 'modern', label: 'Modern Wood' },
     { value: 'emerald', label: 'Emerald Forest' },
     { value: 'marble', label: 'Alabaster Marble' },
   ];
@@ -47,12 +47,10 @@ export const HostMatchCard: React.FC<HostMatchCardProps> = ({ onRoomCreated }) =
     setLoading(true);
     setError(null);
     try {
-      // Parse minutes and increment
       const [minStr, incStr] = timeControl.split('+');
       const initialMinutes = parseInt(minStr, 10) || 5;
       const incrementSeconds = parseInt(incStr, 10) || 0;
 
-      // Call backend REST endpoint POST /api/rooms
       const state = await createRoom({
         initialMinutes,
         incrementSeconds,
@@ -61,7 +59,6 @@ export const HostMatchCard: React.FC<HostMatchCardProps> = ({ onRoomCreated }) =
       onRoomCreated?.(state.roomCode);
     } catch (err: any) {
       console.warn('Backend createRoom call failed, generating local fallback code', err);
-      // Client-side fallback if backend is offline
       const fallbackCode = Math.random().toString(36).substring(2, 8).toUpperCase();
       onRoomCreated?.(fallbackCode);
     } finally {
@@ -73,25 +70,25 @@ export const HostMatchCard: React.FC<HostMatchCardProps> = ({ onRoomCreated }) =
     <GlassCard className="flex flex-col justify-between h-full">
       <div>
         {/* Header */}
-        <div className="flex items-start gap-3.5 mb-6">
+        <div className="flex items-start gap-3.5 mb-5">
           <IconBadge>
-            <Crown className="w-5 h-5 text-[#c9a86a]" />
+            <Crown className="w-5 h-5 text-white" />
           </IconBadge>
           <div>
-            <h2 className="text-xl font-serif font-semibold text-[#f5f5f7] tracking-tight">
+            <h2 className="text-xl font-sans font-bold text-[#1c1c1c] tracking-tight">
               Host Match
             </h2>
-            <p className="text-xs font-sans text-[#8e8e93] mt-0.5">
+            <p className="text-xs font-sans text-[#6b6b6b] mt-0.5">
               Create a custom game with your own rules
             </p>
           </div>
         </div>
 
         {/* 2x2 Form Controls Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
           <DarkSelect
             label="Game Mode"
-            icon={<User className="w-3.5 h-3.5" />}
+            icon={<Zap className="w-3.5 h-3.5" />}
             options={gameModeOptions}
             value={gameMode}
             onChange={setGameMode}
@@ -123,15 +120,15 @@ export const HostMatchCard: React.FC<HostMatchCardProps> = ({ onRoomCreated }) =
         </div>
 
         {error && (
-          <div className="text-xs text-rose-400 bg-rose-950/40 p-2.5 rounded-xl border border-rose-800/40 mb-3">
+          <div className="text-xs text-rose-600 bg-rose-50 p-2.5 rounded-xl border border-rose-200 mb-3">
             {error}
           </div>
         )}
       </div>
 
-      {/* Full-width Light Pill Button */}
+      {/* Full-width Terracotta Red Pill Button */}
       <PillButton
-        variant="filled"
+        variant="filled-red"
         icon={<Play className="w-3.5 h-3.5 fill-current" />}
         onClick={handleCreateMatch}
         disabled={loading}

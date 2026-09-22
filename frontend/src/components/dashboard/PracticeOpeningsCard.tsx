@@ -58,22 +58,22 @@ export const PracticeOpeningsCard: React.FC<PracticeOpeningsCardProps> = ({
     <GlassCard className="flex flex-col justify-between h-full">
       <div>
         {/* Header */}
-        <div className="flex items-start gap-3.5 mb-6">
+        <div className="flex items-start gap-3.5 mb-5">
           <IconBadge>
-            <BookOpen className="w-5 h-5 text-[#c9a86a]" />
+            <BookOpen className="w-5 h-5 text-white" />
           </IconBadge>
           <div>
-            <h2 className="text-xl font-serif font-semibold text-[#f5f5f7] tracking-tight">
+            <h2 className="text-xl font-sans font-bold text-[#1c1c1c] tracking-tight">
               Practice Openings
             </h2>
-            <p className="text-xs font-sans text-[#8e8e93] mt-0.5">
+            <p className="text-xs font-sans text-[#6b6b6b] mt-0.5">
               Train with AI and master the openings
             </p>
           </div>
         </div>
 
         {/* 2-Column Selects: Opening & Difficulty */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
           <DarkSelect
             label="Opening"
             icon={<BookOpen className="w-3.5 h-3.5" />}
@@ -92,14 +92,14 @@ export const PracticeOpeningsCard: React.FC<PracticeOpeningsCardProps> = ({
         </div>
 
         {/* Filter Pill Tabs */}
-        <div className="mb-6">
+        <div className="mb-5">
           <FilterTab tabs={tabs} activeId={activeTab} onChange={setActiveTab} />
         </div>
       </div>
 
-      {/* Full-width Outlined Button */}
+      {/* Full-width Terracotta Red Pill Button */}
       <PillButton
-        variant="outline"
+        variant="filled-red"
         icon={<Play className="w-3.5 h-3.5 fill-current" />}
         onClick={() => onStartPractice?.(opening, difficulty, activeTab)}
       >

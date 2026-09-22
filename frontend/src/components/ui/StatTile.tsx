@@ -19,23 +19,23 @@ export const StatTile: React.FC<StatTileProps> = ({
   return (
     <div
       className={clsx(
-        'flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.08)] transition-all duration-300 hover:border-[rgba(255,255,255,0.14)] hover:bg-[rgba(255,255,255,0.055)]',
+        'flex items-center gap-3 p-3 sm:p-3.5 rounded-xl bg-[#f7f5f0] border border-[#e8e4db] transition-all duration-300 hover:border-[#d4cec3] hover:bg-white shadow-sm',
         className
       )}
     >
-      <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[rgba(201,168,106,0.1)] border border-[rgba(201,168,106,0.2)] text-[#c9a86a] shrink-0">
+      <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-[#b5493c]/10 text-[#b5493c] shrink-0">
         {icon}
       </div>
 
       <div className="flex flex-col min-w-0">
         {loading ? (
-          <div className="h-6 w-16 bg-white/10 rounded animate-pulse mb-1" />
+          <div className="h-5 w-12 bg-stone-200 rounded animate-pulse mb-1" />
         ) : (
-          <span className="text-lg sm:text-xl font-sans font-bold text-[#f5f5f7] tracking-tight leading-none truncate">
+          <span className="text-base sm:text-lg font-sans font-bold text-[#1c1c1c] tracking-tight leading-none truncate">
             {value}
           </span>
         )}
-        <span className="text-[11px] font-sans font-medium uppercase tracking-wider text-[#8e8e93] mt-1 truncate">
+        <span className="text-[10px] sm:text-[11px] font-sans font-medium uppercase tracking-wider text-[#6b6b6b] mt-0.5 truncate">
           {label}
         </span>
       </div>

@@ -82,10 +82,14 @@ The following endpoints are currently stubbed on the client with fallbacks/local
 
 ---
 
-## Design System Note: Public Landing vs. App Dashboard Palette
+## Design System: Unified Warm Cream & Terracotta Red Palette (Single Source of Truth)
 
 > [!NOTE]
-> **Design Consistency Decision**:
-> - **Public Marketing Landing Hero (`LandingHero.tsx`)**: Uses a **light warm cream (`#f7f5f0`)**, solid black (`#141414`), and **brick/terracotta red (`#b5493c`)** palette with a photographic chess set layer seamlessly blended into the background.
-> - **Authenticated App Dashboard (`CheckmateDashboard.tsx`)**: Uses a **dark near-black (`#0a0a0d`)**, frosted glass panels, and **warm champagne gold (`#c9a86a`)** palette with 100% SVG/CSS vector knights.
-> - **Architectural Rationale**: This creates an intentionally distinct **public marketing conversion stage** (clean, welcoming, editorial) vs. an **immersive in-app focus stage** (low eye strain, luxurious dark mode for long chess sessions). Both modes share the Checkmate crown brandmark and typographic hierarchy.
+> **Unified Design System (Supersedes earlier dark-theme concept)**:
+> - **Unified Visual Identity**: The entire platform — both the public landing page (`LandingHero.tsx`) and authenticated dashboard (`CheckmateDashboard.tsx`) — now shares ONE consistent visual identity.
+> - **Color Tokens**:
+>   - **Background**: Warm cream (`#f5f2ec` / `#f7f5f0`).
+>   - **Surfaces**: Slightly whiter warm card surfaces (`#fbfaf7`), subtle 1px border (`rgba(0,0,0,0.06)` / `#e8e4db`), soft elevation shadow.
+>   - **Accents**: Terracotta / brick red (`#b5493c`) for icon badges, primary CTAs, active indicators, and focal headlines.
+>   - **Typography**: Near-black (`#1c1c1c`) headings, mid-gray (`#6b6b6b`) labels, with serif italic treatment (*Same Game / Deeper Minds*).
+> - **Hero Integration**: The dual-knight photography blends seamlessly into the warm background arch via radial gradient edge feathering, color grading, idle motion, and SVG grain overlays without rectangular photo cuts.

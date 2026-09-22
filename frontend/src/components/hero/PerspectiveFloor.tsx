@@ -2,20 +2,20 @@ import React from 'react';
 
 export const PerspectiveFloor: React.FC = () => {
   const rows = 6;
-  const cols = 10;
+  const cols = 12;
 
   return (
-    <div className="relative w-full max-w-xl h-48 -mt-20 overflow-hidden pointer-events-none select-none flex items-center justify-center">
-      {/* 3D Perspective Plane */}
+    <div className="absolute inset-x-0 bottom-0 h-64 overflow-hidden pointer-events-none select-none flex items-end justify-center -z-10">
+      {/* 3D Perspective Chessboard Plane */}
       <div
-        className="w-[640px] h-[340px] grid grid-cols-10 grid-rows-6 border border-white/5 shadow-2xl"
+        className="w-[1200px] h-[400px] grid grid-cols-12 grid-rows-6 shadow-2xl"
         style={{
-          transform: 'perspective(520px) rotateX(68deg) translateY(-20px)',
+          transform: 'perspective(580px) rotateX(72deg) translateY(60px)',
           transformOrigin: '50% 100%',
           maskImage:
-            'radial-gradient(ellipse 65% 75% at 50% 85%, rgba(0,0,0,0.95) 20%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 95%)',
+            'radial-gradient(ellipse 70% 80% at 50% 90%, rgba(0,0,0,0.85) 20%, rgba(0,0,0,0.3) 65%, rgba(0,0,0,0) 100%)',
           WebkitMaskImage:
-            'radial-gradient(ellipse 65% 75% at 50% 85%, rgba(0,0,0,0.95) 20%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 95%)',
+            'radial-gradient(ellipse 70% 80% at 50% 90%, rgba(0,0,0,0.85) 20%, rgba(0,0,0,0.3) 65%, rgba(0,0,0,0) 100%)',
         }}
       >
         {Array.from({ length: rows * cols }).map((_, index) => {
@@ -26,24 +26,23 @@ export const PerspectiveFloor: React.FC = () => {
           return (
             <div
               key={index}
-              className={`relative border-[0.5px] border-white/[0.04] transition-colors duration-500 ${
+              className={`relative border-[0.5px] border-black/[0.04] transition-colors duration-500 ${
                 isLight
-                  ? 'bg-gradient-to-b from-[#1b1c24] to-[#121319]'
-                  : 'bg-gradient-to-b from-[#101116] to-[#08080b]'
+                  ? 'bg-gradient-to-b from-[#f2ece2] to-[#e4ded2]'
+                  : 'bg-gradient-to-b from-[#38332c] to-[#25221d]'
               }`}
             >
-              {/* Subtle top edge light reflection */}
               {isLight && (
-                <div className="absolute inset-x-0 top-0 h-[1px] bg-white/[0.08]" />
+                <div className="absolute inset-x-0 top-0 h-[1px] bg-white/40" />
               )}
             </div>
           );
         })}
       </div>
 
-      {/* Surface Reflection & Rim Glow */}
-      <div className="absolute bottom-6 w-96 h-12 bg-gradient-to-r from-transparent via-[#c9a86a]/15 to-transparent filter blur-xl" />
-      <div className="absolute bottom-2 w-72 h-8 bg-gradient-to-r from-transparent via-white/10 to-transparent filter blur-md" />
+      {/* Glossy Horizon Reflections */}
+      <div className="absolute bottom-8 w-[600px] h-14 bg-gradient-to-r from-transparent via-[#b5493c]/10 to-transparent filter blur-2xl" />
+      <div className="absolute bottom-2 w-[480px] h-8 bg-gradient-to-r from-transparent via-white/30 to-transparent filter blur-md" />
     </div>
   );
 };
