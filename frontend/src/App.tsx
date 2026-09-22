@@ -19,11 +19,10 @@ import { EngineEvaluationBar } from './components/practice/EngineEvaluationBar';
 import { Header } from './components/common/Header';
 import { AboutContactModal } from './components/modals/AboutContactModal';
 import { LandingPage } from './pages/LandingPage';
-import { DashboardHub } from './pages/DashboardHub';
+import { CheckmateDashboard } from './pages/CheckmateDashboard';
 import { MultiplayerRoomPage } from './pages/MultiplayerRoomPage';
 import { PracticePage } from './pages/PracticePage';
 import { isMuted, toggleMute, playButtonClick } from './utils/soundEngine';
-import { createRoomApi } from './services/api';
 
 export interface UserProfile {
   name: string;
@@ -56,8 +55,10 @@ export const App: React.FC = () => {
     if (urlRoomId || sessionStorage.getItem('chess_room_code')) {
       return 'multiplayer';
     }
-    const saved = localStorage.getItem(STORAGE_USER_KEY);
-    return saved ? 'dashboard' : 'landing';
+    const view = params.get('view');
+    if (view === 'dashboard') return 'dashboard';
+    if (view === 'landing') return 'landing';
+    return 'landing';
   });
 
   const [muted, setMutedState] = useState(() => isMuted());
@@ -126,21 +127,6 @@ export const App: React.FC = () => {
     setMutedState(toggleMute());
   };
 
-  // Dashboard actions
-  const handleCreateRoom = async (params: { initialMinutes: number; incrementSeconds: number; preferredColor?: string | null }) => {
-    try {
-      const res = await createRoomApi(params);
-      const code = res.roomCode;
-      sessionStorage.setItem('chess_room_code', code);
-      return code;
-    } catch {
-      // Fallback local generated code
-      const fallbackCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-      sessionStorage.setItem('chess_room_code', fallbackCode);
-      return fallbackCode;
-    }
-  };
-
   const handleJoinRoom = (code: string) => {
     sessionStorage.setItem('chess_room_code', code);
     setActiveTab('multiplayer');
@@ -150,97 +136,27 @@ export const App: React.FC = () => {
     setActiveTab('practice');
   };
 
-  // 1. Landing View (Unauthenticated)
+  // 1. Checkmate Public Landing Hero View
   if (activeTab === 'landing') {
     return (
-      <div className="min-h-screen bg-ebony-surface text-stone-100 flex flex-col">
-        <Header
-          user={user}
-          onLogout={handleLogout}
-          onOpenAuth={() => setActiveTab('landing')}
-          onOpenAbout={() => setIsAboutOpen(true)}
-          onNavigateHome={() => setActiveTab('landing')}
-          onNavigatePlay={() => {
-            if (user) setActiveTab('dashboard');
-            else {
-              // Guest entry
-              handleLogin({
-                name: 'Guest_' + Math.floor(1000 + Math.random() * 9000),
-                elo: 1500,
-                winRate: 60,
-                totalMatches: 12,
-                topOpening: 'Italian: 70%',
-                isGuest: true,
-              });
-            }
-          }}
-          muted={muted}
-          onToggleMute={handleToggleMute}
-          activeSection="home"
-        />
-
-        <main className="flex-1">
-          <LandingPage
-            onLogin={handleLogin}
-            onGuestLogin={handleLogin}
-            onOpenAbout={() => setIsAboutOpen(true)}
-          />
-        </main>
-
-        <AboutContactModal
-          isOpen={isAboutOpen}
-          onClose={() => setIsAboutOpen(false)}
-          onStartPlaying={() => {
-            if (!user) {
-              handleLogin({
-                name: 'Guest_' + Math.floor(1000 + Math.random() * 9000),
-                elo: 1500,
-                winRate: 60,
-                totalMatches: 12,
-                topOpening: 'Italian: 70%',
-                isGuest: true,
-              });
-            } else {
-              setActiveTab('dashboard');
-            }
-          }}
-        />
-      </div>
+      <LandingPage
+        onLogin={handleLogin}
+        onGuestLogin={handleLogin}
+        onOpenAbout={() => setIsAboutOpen(true)}
+      />
     );
   }
 
-  // 2. Post-Login Flagship Dashboard
+  // 2. Checkmate Flagship Dashboard
   if (activeTab === 'dashboard') {
     return (
-      <div className="min-h-screen bg-ebony-surface text-stone-100 flex flex-col">
-        <Header
-          user={user}
-          onLogout={handleLogout}
-          onOpenAuth={() => setActiveTab('landing')}
-          onOpenAbout={() => setIsAboutOpen(true)}
-          onNavigateHome={() => setActiveTab('dashboard')}
-          onNavigatePlay={() => setActiveTab('multiplayer')}
-          muted={muted}
-          onToggleMute={handleToggleMute}
-          activeSection="home"
-        />
-
-        <main className="flex-1">
-          <DashboardHub
-            user={user}
-            onCreateRoom={handleCreateRoom}
-            onJoinRoom={handleJoinRoom}
-            onStartPractice={handleStartPractice}
-            onOpenAbout={() => setIsAboutOpen(true)}
-          />
-        </main>
-
-        <AboutContactModal
-          isOpen={isAboutOpen}
-          onClose={() => setIsAboutOpen(false)}
-          onStartPlaying={() => setIsAboutOpen(false)}
-        />
-      </div>
+      <CheckmateDashboard
+        onJoinRoom={handleJoinRoom}
+        onStartPractice={() => {
+          handleStartPractice();
+        }}
+        onNavigateLanding={() => setActiveTab('landing')}
+      />
     );
   }
 

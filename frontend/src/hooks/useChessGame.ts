@@ -70,7 +70,7 @@ export function useChessGame(initialGameId?: string) {
   const initializeGame = useCallback(
     async (gameIdToLoad?: string) => {
       try {
-        let state: GameStateResponse;
+        let state: any;
         if (gameIdToLoad) {
           state = await getGame(gameIdToLoad);
         } else {

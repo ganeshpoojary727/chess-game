@@ -66,7 +66,7 @@ export interface GameStateResponse {
   capturedBlackPieces: string[];
   halfMoveClock: number;
   fullMoveNumber: number;
-  createdAt: number;
+  createdAt?: number;
   updatedAt: number;
 }
 

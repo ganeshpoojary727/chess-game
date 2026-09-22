@@ -1,0 +1,28 @@
+:root {
+  /* Checkmate Public Landing Design System Tokens (Light Palette) */
+  --landing-bg: #f7f5f0;
+  --landing-bg-soft: #f2eee6;
+  --landing-bg-motif: #ebe6db;
+  --landing-bg-motif-line: rgba(20, 20, 20, 0.15);
+
+  --landing-text-primary: #141414;
+  --landing-text-secondary: #555555;
+  --landing-text-muted: #757575;
+
+  --landing-accent-red: #b5493c;
+  --landing-accent-red-hover: #9e3e32;
+  --landing-accent-red-subtle: rgba(181, 73, 60, 0.12);
+
+  --landing-border-pill: #dcd8cf;
+  --landing-border-active: #141414;
+
+  --landing-font-headline: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --landing-font-body: 'Inter', -apple-system, sans-serif;
+
+  --landing-radius-pill: 9999px;
+}
+
+/* Noise overlay utility */
+.noise-texture-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+}

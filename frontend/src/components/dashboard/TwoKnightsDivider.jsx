@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { playButtonClick } from '../../utils/soundEngine';
+import TwoKnights3DScene from './TwoKnights3DScene';
 
 export function TwoKnightsDivider({ onCenterpieceClick }) {
   const containerRef = useRef(null);
@@ -133,13 +134,9 @@ export function TwoKnightsDivider({ onCenterpieceClick }) {
           ))}
         </div>
 
-        {/* Oval / Rounded-3xl Frame Holding two-knights.png */}
+        {/* Oval / Rounded-3xl Frame Hosting 3D Knights WebGL Scene */}
         <div className="relative w-56 sm:w-64 md:w-72 h-72 sm:h-80 md:h-92 rounded-[28px] overflow-hidden bg-ebony-surface flex items-center justify-center border border-stone-800/90 shadow-inner">
-          <img
-            src="/assets/two-knights.png"
-            alt="Strat's Chess - Two Knights Centerpiece"
-            className="w-full h-full object-cover object-center filter contrast-125 brightness-105 group-hover:scale-105 transition-transform duration-700 ease-out"
-          />
+          <TwoKnights3DScene isHovered={isHovered} />
 
           {/* Vignette & Gradients */}
           <div className="absolute inset-0 bg-gradient-to-t from-ebony-surface via-transparent to-ebony-surface/40 pointer-events-none" />
